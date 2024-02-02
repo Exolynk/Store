@@ -1,0 +1,24 @@
+{
+  "ident": "add_favorite",
+  "name": {
+    "typ": "language",
+    "langs": {
+      "en": "Add Favorite"
+    }
+  },
+  "description": {
+    "typ": "language",
+    "langs": {
+      "en": "Add this record to your favorites"
+    }
+  },
+  "icon": "add-favorite",
+  "active": true,
+  "system": false,
+  "code": "pub fn show() {\n    let record = exo::get_record()?;\n    let user = exo::get_user();\n    let favs = user.get_value(\"favorites\")?;\n\n    if favs.iter().any(|r| r.to_string() == record.uuid) {\n        return false;\n    }\n    true\n}\n\npub async fn main() {\n    let record = exo::get_record()?;\n    exo::rpc_env(\"add_favorite\", [record.uuid]).await?;\n    Ok(())\n}\n\npub async fn test() {\n    assert!(show() is bool);\n    main().await?;\n    Ok(())\n}\n",
+  "typ": "Workflow",
+  "focus": "Model",
+  "trigger": "None",
+  "order": 0,
+  "test_record": "36599ee0-aa93-4bbf-8b15-ed67f5160958"
+}

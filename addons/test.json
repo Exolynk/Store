@@ -1,0 +1,5 @@
+{
+  "model": "test",
+  "layout": "base",
+  "service": "add_favorite"
+}

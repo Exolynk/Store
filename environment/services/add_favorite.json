@@ -1,0 +1,22 @@
+{
+  "ident": "add_favorite",
+  "name": {
+    "typ": "language",
+    "langs": {
+      "en": "Add favorite"
+    }
+  },
+  "description": {
+    "typ": "language",
+    "langs": {
+      "en": "Add the record to your favorites"
+    }
+  },
+  "icon": "add-favorite",
+  "active": true,
+  "system": false,
+  "code": "",
+  "typ": "Service",
+  "focus": "Environment",
+  "trigger": "None"
+}
