@@ -1,5 +1,18 @@
 {
-  "model": "test",
-  "layout": "base",
-  "service": "add_favorite"
+  "name": {
+    "typ": "language",
+    "langs": {
+      "en": "A test addon"
+    }
+  },
+  "description": {
+    "typ": "language",
+    "langs": {
+      "en": "The description of the test addon"
+    }
+  },
+
+  "env_layout": "base",
+  "env_workflows": ["test/dyn_var_test"],
+  "env_services": ["add_favorite"]
 }

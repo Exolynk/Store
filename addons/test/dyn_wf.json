@@ -1,0 +1,16 @@
+{
+  "name": {
+    "typ": "language",
+    "langs": {
+      "en": "A workflow test addon"
+    }
+  },
+  "description": {
+    "typ": "language",
+    "langs": {
+      "en": "A workflow test addon from a sub folder"
+    }
+  },
+
+  "env_workflows": ["test/dyn_var_test"]
+}
