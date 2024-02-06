@@ -3,13 +3,13 @@
   "name": {
     "typ": "language",
     "langs": {
-      "en": "Dynamic Variable Test"
+      "en": "Dynamic Variable Test 2"
     }
   },
   "description": {
     "typ": "language",
     "langs": {
-      "en": "Workflow to test a dynamic variable with fixed string return"
+      "en": "Workflow 2 to test a dynamic variable with fixed string return"
     }
   },
   "icon": "chevron-phase-2",

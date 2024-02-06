@@ -3,7 +3,7 @@ pub fn show() {
 }
 
 pub async fn main(old, new) {
-    "Always return this fixed string"
+    69
 }
 
 pub async fn test() {
