@@ -1,0 +1,10 @@
+pub fn show() {
+    false
+}
+
+pub async fn main(old, new) {
+    "Always return this fixed string"
+}
+
+pub async fn test() {
+}

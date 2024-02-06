@@ -1,0 +1,24 @@
+{
+  "ident": "dyn_var_test",
+  "name": {
+    "typ": "language",
+    "langs": {
+      "en": "Dynamic Variable Test"
+    }
+  },
+  "description": {
+    "typ": "language",
+    "langs": {
+      "en": "Workflow to test a dynamic variable with fixed string return"
+    }
+  },
+  "icon": "chevron-phase-2",
+  "active": true,
+  "system": false,
+  "code": "",
+  "typ": "Workflow",
+  "focus": "Environment",
+  "trigger": "None",
+  "order": 0,
+  "test_record": "00000000-0000-0000-0000-000000000000"
+}
