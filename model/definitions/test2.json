@@ -1,0 +1,116 @@
+{
+  "uuid": "00000000-0000-0000-0000-000000000000",
+  "ident": "test2",
+  "version": {
+    "typ": "version",
+    "kind": "Number",
+    "version": "1"
+  },
+  "status": "draft",
+  "name": {
+    "typ": "language",
+    "langs": {
+      "en": "Test 2"
+    }
+  },
+  "description": {
+    "typ": "language",
+    "langs": {
+      "en": "Test Model 2"
+    }
+  },
+  "icon": "curriculum",
+  "layout": "base.html",
+  "variables": [
+    {
+      "ident": "string",
+      "system": false,
+      "released": true,
+      "name": {
+        "typ": "language",
+        "langs": {
+          "en": "String"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "en": "String"
+        }
+      },
+      "value": {
+        "String": ""
+      },
+      "required": false,
+      "access": "Write",
+      "gdpr": "A simple test String",
+      "settings": "None"
+    }
+  ],
+  "workflows": ["add_favorite"],
+  "services": [],
+  "record_status": {
+    "typ": "selection",
+    "selected": ["new"],
+    "options": {
+      "new": {
+        "typ": "language",
+        "langs": {
+          "de": "Neu",
+          "en": "New"
+        }
+      }
+    }
+  },
+  "record_right": "00000000-0000-0000-0000-000000000000",
+  "system": false,
+  "children": {
+    "ident": "children",
+    "system": true,
+    "released": false,
+    "name": {
+      "typ": "language",
+      "langs": {
+        "en": "Children"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "en": "Children Table"
+      }
+    },
+    "value": {
+      "Table": {
+        "typ": "table",
+        "entries": []
+      }
+    },
+    "required": true,
+    "access": "Change",
+    "gdpr": "",
+    "settings": {
+      "Table": {
+        "columns": [
+          {
+            "ident": "children",
+            "position": 0,
+            "name": {
+              "typ": "language",
+              "langs": {
+                "en": "Children"
+              }
+            },
+            "read_only": false,
+            "value": {
+              "Reference": "00000000-0000-0000-0000-000000000000"
+            },
+            "setting": "None"
+          }
+        ],
+        "add_row_only": false,
+        "add_at_bottom": false
+      }
+    }
+  }
+}
