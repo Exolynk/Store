@@ -20,7 +20,7 @@
     }
   },
   "icon": "curriculum",
-  "layout": "base.html",
+  "layout": "base",
   "variables": [
     {
       "ident": "string",
