@@ -1,0 +1,9 @@
+pub async fn main(record) {
+    println!("test");
+    Ok(())
+}
+
+#[test]
+pub async fn test() {
+    Ok(())
+}

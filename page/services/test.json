@@ -1,0 +1,22 @@
+{
+  "ident": "test",
+  "name": {
+    "typ": "language",
+    "langs": {
+      "en": "Test Service"
+    }
+  },
+  "description": {
+    "typ": "language",
+    "langs": {
+      "en": "This is a test Service"
+    }
+  },
+  "icon": "add-favorite",
+  "active": true,
+  "system": false,
+  "code": "",
+  "typ": "Service",
+  "focus": "Environment",
+  "trigger": "None"
+}

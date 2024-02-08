@@ -15,5 +15,6 @@
   "env_layout": "base",
   "env_workflows": ["test/dyn_var_test", "test2/dyn_var_test2"],
   "env_services": ["add_favorite"],
-  "models": ["test", "test2"]
+  "models": ["test", "test2"],
+  "pages": ["test"]
 }

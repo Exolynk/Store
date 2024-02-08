@@ -1,0 +1,15 @@
+{
+  "uuid": "00000000-0000-0000-0000-000000000000",
+  "ident": "test",
+  "name": {
+    "typ": "language",
+    "langs": {
+      "en": "Test Page"
+    }
+  },
+  "active": false,
+  "public": false,
+  "layout": "base",
+  "workflows": [],
+  "services": ["test"]
+}
