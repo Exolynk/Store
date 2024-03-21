@@ -3,7 +3,7 @@ pub fn show() {
 }
 
 pub async fn main() {
-    let lang = exo::get_user().get_value("language").map(|s| s.get_selected_single()).unwrap_or("en");
+    let lang = exo::get_user().get_value("language").and_then(|s| s.get_selected_single()).unwrap_or("en");
 
     let title = match lang {
         "de" => "Record löschen",

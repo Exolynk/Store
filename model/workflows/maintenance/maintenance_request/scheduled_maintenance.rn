@@ -1,8 +1,8 @@
 pub fn show() {
     let record = exo::get_record()?;
-    let status = record.get_value("status").map(|s| s.get_selected_single()).unwrap_or("");
+    let status = record.get_value("status").and_then(|s| s.get_selected_single()).unwrap_or("");
 
-    if status == "scheduled" {
+    if status == "new" {
         return true;
     } else if status == "purchase_request" {
         return true;
@@ -12,7 +12,7 @@ pub fn show() {
 
 pub async fn main() {
     let record = exo::get_record()?;
-    exo::rpc_model("set_status_service", ["in_process", "rgb(231, 140, 7, 0.3)"]).await?;
+    exo::rpc_model("set_status_service", ["scheduled", "rgb(66, 124, 172, 0.3)"]).await?;
     Ok(())
 }
 

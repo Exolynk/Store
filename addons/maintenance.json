@@ -15,6 +15,6 @@
     "env_layout": "maintenance",
     "env_workflows": ["maintenance/get_open_invoices_workflow"],
     "env_services": ["maintenance/get_open_invoices_service", "maintenance/maintenance_overdue"],
-    "models": ["maintenance/machine", "maintenance/product", "maintenance/service_request"],
+    "models": ["maintenance/machine", "maintenance/product", "maintenance/maintenance_request"],
     "pages": ["maintenance/open_invoices", "maintenance/public_status"]
   }

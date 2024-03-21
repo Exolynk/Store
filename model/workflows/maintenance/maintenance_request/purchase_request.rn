@@ -1,6 +1,6 @@
 pub fn show() {
     let record = exo::get_record()?;
-    let status = record.get_value("status").map(|s| s.get_selected_single()).unwrap_or("");
+    let status = record.get_value("status").and_then(|s| s.get_selected_single()).unwrap_or("");
 
     if status != "closed" {
         return true;

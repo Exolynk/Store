@@ -718,15 +718,15 @@
       }
     ],
     "workflows": [
-        "maintenance/service_request/in_process", 
-        "maintenance/service_request/closed", 
-        "maintenance/service_request/new", 
-        "maintenance/service_request/scheduled_maintenance", 
-        "maintenance/service_request/purchase_request",
+        "maintenance/maintenance/in_process", 
+        "maintenance/maintenance/closed", 
+        "maintenance/maintenance/new", 
+        "maintenance/maintenance/scheduled_maintenance", 
+        "maintenance/maintenance/purchase_request",
         "delete_record"
     ],
     "services": [
-        "maintenance/service_request/set_status_service",
+        "maintenance/maintenance/set_status_service",
         "delete_record"
     ],
     "record_right": "00000000-0000-0000-0000-000000000000",

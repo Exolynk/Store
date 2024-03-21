@@ -13,15 +13,6 @@
     <highlight-button title="Wartungsrechnungen" text="Offene Wartungsrechnungen" icon="task" link="#/env_ident/page/open_invoices" />
     
     <new-line />   
-    <chart typ="bar" name="Registrierte Maschinen nach Kategorie">
-        <chart-data name="Pastamaschine" sql="SELECT count(uuid) FROM machine WHERE category_selection='1';" />
-        <chart-data name="Gnocchimaschine" sql="SELECT count(uuid) FROM machine WHERE category_selection='2';" />
-        <chart-data name="Raviolimaschine" sql="SELECT count(uuid) FROM machine WHERE category_selection='3';" />
-        <chart-data name="Trocknungsschrank" sql="SELECT count(uuid) FROM machine WHERE category_selection='4';" />
-        <chart-data name="Walzmaschine" sql="SELECT count(uuid) FROM machine WHERE category_selection='5';" />
-        <chart-data name="Teigknetmaschinen" sql="SELECT count(uuid) FROM machine WHERE category_selection='6';" />
-    </chart>
-    
     <!-- Wartungsumsatz nach Status -->
     <chart typ="doughnut" name="Wartungsumsatz nach Status (CHF)">
         <chart-data name="Überfällige Wartungen" sql="SELECT sum(maintenance_base_price_float) FROM machine WHERE status='maintenance';" />
