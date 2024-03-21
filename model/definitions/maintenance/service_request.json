@@ -722,7 +722,8 @@
         "maintenance/service_request/closed", 
         "maintenance/service_request/new", 
         "maintenance/service_request/scheduled_maintenance", 
-        "maintenance/purchase_request"
+        "maintenance/service_request/purchase_request",
+        "delete_record"
     ],
     "services": [
         "maintenance/service_request/set_status_service",
