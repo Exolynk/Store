@@ -30,7 +30,7 @@
       {
         "ident": "files",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -75,7 +75,7 @@
       {
         "ident": "last_maintenance_datetime",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -103,7 +103,7 @@
       {
         "ident": "product_reference",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -141,7 +141,7 @@
       {
         "ident": "registered_on_string",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -173,7 +173,7 @@
       {
         "ident": "maintenance_base_price_float",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -205,7 +205,7 @@
       {
         "ident": "qrcode_id_string",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -237,7 +237,7 @@
       {
         "ident": "serialnumber_string",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -265,7 +265,7 @@
       {
         "ident": "service_report_table",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -393,7 +393,7 @@
       {
         "ident": "maintenance_interval",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -421,7 +421,7 @@
       {
         "ident": "documentation_rtf",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -451,7 +451,7 @@
       {
         "ident": "name",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -481,7 +481,7 @@
       {
         "ident": "description",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -511,7 +511,7 @@
       {
         "ident": "highlight_color",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -540,7 +540,7 @@
       {
         "ident": "status",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {

@@ -62,7 +62,7 @@
       {
         "ident": "purchase_price_float",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -90,7 +90,7 @@
       {
         "ident": "selling_price_float",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -118,7 +118,7 @@
       {
         "ident": "service_interval_int",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -148,7 +148,7 @@
       {
         "ident": "files",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -193,7 +193,7 @@
       {
         "ident": "name",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -222,7 +222,7 @@
       {
         "ident": "description",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {

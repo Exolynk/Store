@@ -1,6 +1,6 @@
 {
     "uuid": "00000000-0000-0000-0000-000000000000",
-    "ident": "service_request",
+    "ident": "maintenance_request",
     "version": {
       "typ": "version",
       "kind": "Number",
@@ -22,12 +22,12 @@
       }
     },
     "icon": "wrench",
-    "layout": "maintenance/service_request",
+    "layout": "maintenance/maintenance_request",
     "variables": [
       {
         "ident": "client_reference",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -61,7 +61,7 @@
       {
         "ident": "assigned_user_technician",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -95,7 +95,7 @@
       {
         "ident": "assigned_user_buyer",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -129,7 +129,7 @@
       {
         "ident": "product_maintainance_reference_table",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -209,7 +209,7 @@
       {
         "ident": "purchase_request_table",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -319,7 +319,7 @@
       {
         "ident": "client_signature",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -365,7 +365,7 @@
       {
         "ident": "maintenance_info",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -397,7 +397,7 @@
       {
         "ident": "maintainance_report_table",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -508,7 +508,7 @@
       {
         "ident": "name",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -537,7 +537,7 @@
       {
         "ident": "description",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -566,7 +566,7 @@
       {
         "ident": "highlight_color",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -595,7 +595,7 @@
       {
         "ident": "calendar_start",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -623,7 +623,7 @@
       {
         "ident": "calendar_end",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
@@ -651,7 +651,7 @@
       {
         "ident": "status",
         "system": false,
-        "released": true,
+        "released": false,
         "name": {
           "typ": "language",
           "langs": {
