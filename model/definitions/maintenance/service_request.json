@@ -718,12 +718,11 @@
       }
     ],
     "workflows": [
-        "maintenance/service_request/delete_workflow", 
         "maintenance/service_request/in_process", 
         "maintenance/service_request/closed", 
         "maintenance/service_request/new", 
         "maintenance/service_request/scheduled_maintenance", 
-        "purchase_request"
+        "maintenance/purchase_request"
     ],
     "services": [
         "maintenance/service_request/set_status_service",
