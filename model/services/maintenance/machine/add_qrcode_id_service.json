@@ -1,0 +1,26 @@
+{
+    "ident": "add_qrcode_id_service",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "en": "Allocate QR-Code",
+        "de": "QR-Code zuweisen"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "en": "Allocate QR-Code Service",
+        "de": "QR-Code zuweisen Service"
+      }
+    },
+    "icon": "qr-code",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Service",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 8,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

@@ -1,0 +1,19 @@
+pub fn show() {
+    let record = exo::get_record()?;
+    let status = record.get_value("status").map(|s| s.get_selected_single()).unwrap_or("");
+
+    if status != "closed" {
+        return true;
+    }
+    return false;
+}
+
+pub async fn main() {
+    let record = exo::get_record()?;
+    exo::rpc_model("set_status_service", ["purchase_request", "rgb(66, 124, 172, 0.3)"]).await?;
+    Ok(())
+}
+
+pub async fn test() {
+    main().await?;
+}

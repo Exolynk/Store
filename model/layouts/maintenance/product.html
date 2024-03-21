@@ -1,0 +1,39 @@
+<record>
+    <!-- Produkt Information -->
+    <tab name="Produkt Informationen" active="true">
+        <data name="Information">
+            <variable ident="name" />
+            <variable ident="description" />
+            <variable ident="service_interval_int" />
+        </data>
+        
+        <data name="Einkauf" collapsed="true">
+            <variable ident="purchase_price_float" />
+            <variable ident="selling_price_float" />
+        </data>
+    </tab>
+        
+    <!-- Tab Documentation -->    
+    <tab name="Dokumentation">
+        <data name="Dokumentation" collapsed="false">
+            <raw-html>
+                <p style="color:#E78C07; font-size:14px; margin-bottom:-20px; margin-top:-2px;"><strong> Wichtig! </strong>Nach jeder Änderung mit dem <ui5-icon name="save" style="color:#E78C07; font-size:14px;"> </ui5-icon> Button speichern.</p>
+            </raw-html>
+            <variable ident="documentation" />
+        </data>
+    </tab>
+    
+    <!-- Tab Files -->    
+    <tab name="Dateien" active="true" status="">
+        <data name="Dateien" collapsed="true">
+            <variable ident="files" />
+        </data>    
+        <files variable="files" />
+    </tab>
+
+    <!-- Tab Logs -->   
+    <tab name="Logs">
+        <record-logs />
+    </tab>
+
+</record>

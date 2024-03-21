@@ -1,0 +1,31 @@
+<home>
+    <highlight-button title="Benutzer" text="Alle Benutzer" icon="person-placeholder" link="#/search?query[models][0]=user" />
+    <highlight-button title="Dateien" text="Alle Anhänge" icon="attachment-photo" link="#/search?query[models][0]=file&view=Tree" />
+    <highlight-button title="Produkte Verzeichnis" text="Alle Produkte" icon="product" link="#/search?query[models][0]=product&view=Table&cols=name+description+category_selection+" />
+    <highlight-button title="QR-Codes Bestellen" text="Neue Aufkleber bestellen" icon="cart" link="mailto:philippe@exolynk.com?&subject=QR%2DCode%20Bestellung%20%2D%20Korngold%20AG&body=Bitte%20folgende%20Anzahl%20an%20QR%2DCodes%20generieren%20und%20uns%20zusenden%3A%20" />
+    
+    <new-line />
+    <highlight-button title="Alle Maschinen" text="Alle Maschinen" icon="action-settings" link="#/search?query[models][0]=machine&view=Table&cols=registered_on_string+product_reference+status+dyn_diff_days_next_maintenance+dyn_date_next_maintenance+" />
+    <highlight-button title="Anstehende Wartungen" text="Anstehende Wartungen" icon="wrench" link="#/search?query[models][0]=machine&status[0]=maintenance&view=Table&cols=registered_on_string+product_reference+status+dyn_diff_days_next_maintenance+dyn_date_next_maintenance+" />
+    
+    <new-line />
+    <highlight-button title="Wartungsaufträge" text="Alle Wartungsaufträge" icon="activity-items" link="#/search?query[models][0]=maintenance_request" />
+    <highlight-button title="Wartungsrechnungen" text="Offene Wartungsrechnungen" icon="task" link="#/env_ident/page/open_invoices" />
+    
+    <new-line />   
+    <chart typ="bar" name="Registrierte Maschinen nach Kategorie">
+        <chart-data name="Pastamaschine" sql="SELECT count(uuid) FROM machine WHERE category_selection='1';" />
+        <chart-data name="Gnocchimaschine" sql="SELECT count(uuid) FROM machine WHERE category_selection='2';" />
+        <chart-data name="Raviolimaschine" sql="SELECT count(uuid) FROM machine WHERE category_selection='3';" />
+        <chart-data name="Trocknungsschrank" sql="SELECT count(uuid) FROM machine WHERE category_selection='4';" />
+        <chart-data name="Walzmaschine" sql="SELECT count(uuid) FROM machine WHERE category_selection='5';" />
+        <chart-data name="Teigknetmaschinen" sql="SELECT count(uuid) FROM machine WHERE category_selection='6';" />
+    </chart>
+    
+    <!-- Wartungsumsatz nach Status -->
+    <chart typ="doughnut" name="Wartungsumsatz nach Status (CHF)">
+        <chart-data name="Überfällige Wartungen" sql="SELECT sum(maintenance_base_price_float) FROM machine WHERE status='maintenance';" />
+        <chart-data name="Anstehende Wartungen" sql="SELECT sum(maintenance_base_price_float) FROM machine WHERE status='active';" />
+        <chart-data name="Inaktive Maschinen" sql="SELECT sum(maintenance_base_price_float) FROM machine WHERE status='inactive';" />
+    </chart>
+</home>

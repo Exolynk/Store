@@ -1,0 +1,57 @@
+<record>
+    <!-- Maschine Information -->
+    <tab name="Produkt Information" active="true">
+        <data name="Maschine" collapsed="false">
+            <variable ident="name" name="Name (Kunde/Maschine)" />
+            <variable ident="description" name="Beschreibung (Kunde/Maschine)" />
+            <variable ident="registered_on_string" name="Registriert auf (wird in Kunden App angezeigt)"/>
+            <variable ident="serialnumber_string" name="Serienummer (wird in Kunden App angezeigt)" />
+            <variable ident="product_reference" />
+            <variable ident="status" name="Status (Aktiv / Wartung fällig / Inaktiv)" />
+        </data>
+        
+        <data name="Wartung" collapsed="true">
+            <variable ident="maintenance_base_price_float"/>
+            <variable ident="registered_on_string"/>
+            <variable ident="maintenance_interval"/>
+            <variable ident="last_maintenance_datetime"/>
+            <variable name="Tage bis nächste Wartung" workflow="dyn_diff_days_next_maintenance" />
+            <variable name="Nächste Wartung fällig am" workflow="dyn_date_next_maintenance" />
+        </data>
+        
+        <data name="QR Code" collapsed="true">
+            <raw-html style="color: #E78C07; white-space: nowrap;">
+                <p style="color:#E78C07; white-space: nowrap;"><ui5-icon name="information" style="color:#E78C07; white-space: nowrap; vertical-align: middle;"></ui5-icon> QR-Code muss hinterlegt sein, damit Scanning funktioniert! Code darf nicht doppelt verwendet werden! </p>
+            </raw-html>
+            <variable ident="qrcode_id_string" />
+        </data>
+        
+    </tab>
+    
+    <!-- Attachements -->
+    <tab name="Dateien" active="true" >
+        <files variable="files" />
+    </tab>
+    
+    <!-- Service Report -->
+    <tab name="Service Report" active="true" >
+        <data name="Service Report">
+            <variable ident="service_report_table" />
+        </data>
+    </tab>
+    
+    <!-- Tab Dokumentation -->    
+    <tab name="Dokumentation">
+        <data name="Dokumentation" collapsed="false">
+            <raw-html>
+                <p style="color:#E78C07; font-size:14px; margin-bottom:-20px; margin-top:-2px;"><strong> Wichtig! </strong>Nach jeder Änderung mit dem <ui5-icon name="save" style="color:#E78C07; font-size:14px;"> </ui5-icon> Button speichern.</p>
+            </raw-html>
+            <variable ident="documentation_rtf" />
+        </data>
+    </tab>
+    
+    <!-- Tab Logs -->    
+    <tab name="Logs">
+        <record-logs />
+    </tab>
+</record>

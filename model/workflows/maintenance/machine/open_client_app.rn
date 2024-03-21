@@ -1,0 +1,15 @@
+pub fn show() {
+    return true;
+}
+
+pub async fn main() {
+    let record = exo::get_record()?;
+    let query = exo::ui::UrlQuery::empty();
+    query["qr_code"] = record.get_value("qrcode_id_string")?;
+    exo::ui::navigate_with_query("https://exolynk.app/#/korngold/page/public_status", "_blank", query);
+    Ok(())
+}
+
+pub async fn test() {
+    main().await?;
+}

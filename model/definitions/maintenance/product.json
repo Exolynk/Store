@@ -1,0 +1,256 @@
+{
+    "uuid": "00000000-0000-0000-0000-000000000000",
+    "ident": "product",
+    "version": {
+      "typ": "version",
+      "kind": "Number",
+      "version": "1"
+    },
+    "status": "draft",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "fr": "Type d'appareil",
+        "de": "Produkt Typ",
+        "it": "Tipo di apparecchio",
+        "en": "Product Type"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "Produkt",
+        "fr": "Produit",
+        "en": "Product"
+      }
+    },
+    "icon": "product",
+    "layout": "maintenance/product",
+    "variables": [
+        {
+            "ident": "documentation",
+            "system": false,
+            "released": false,
+            "name": {
+              "typ": "language",
+              "langs": {
+                "en": "Documentation",
+                "de": "Dokumentation"
+              }
+            },
+            "description": {
+              "typ": "language",
+              "langs": {
+                "en": "Documentation",
+                "de": "Dokumentation"
+              }
+            },
+            "value": {
+              "String": ""
+            },
+            "required": false,
+            "access": {
+              "00000000-0000-0000-0000-000000000000": "Write"
+            },
+            "gdpr": "A riche text field for general documentation purposes",
+            "settings": {
+              "String": {
+                "typ": "Markdown"
+              }
+            }
+          },
+      {
+        "ident": "purchase_price_float",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "de": "Einstandspreis",
+            "en": "Purchase Price"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "Purchase Price",
+            "de": "Einstandspreis"
+          }
+        },
+        "value": {
+          "Float": 0.0
+        },
+        "required": false,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "selling_price_float",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "en": "Selling Price",
+            "de": "Verkaufspreis"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "de": "Verkaufspreis",
+            "en": "Selling Price"
+          }
+        },
+        "value": {
+          "Float": 0.0
+        },
+        "required": false,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "service_interval_int",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "en": "Maintenance Interval (d)",
+            "de": "Wartungsintervall (t)",
+            "fr": "Intervalle de maintenance (j)",
+            "it": "Intervallo di manutenzione (g)"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "de": "Wartungsintervall",
+            "en": "Maintenance Interval (m)"
+          }
+        },
+        "value": {
+          "Integer": 0
+        },
+        "required": false,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "files",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "en": "Files",
+            "de": "Dateien"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "Files",
+            "de": "Dateien"
+          }
+        },
+        "value": {
+          "List": {
+            "typ": "list",
+            "data": []
+          }
+        },
+        "required": false,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": {
+          "List": {
+            "restrict_value": {
+              "Reference": "00000000-0000-0000-0000-000000000000"
+            },
+            "restrict_setting": {
+              "Reference": {
+                "typ": {
+                  "RecordTyp": "file"
+                }
+              }
+            },
+            "add_at_bottom": false
+          }
+        }
+      },
+      {
+        "ident": "name",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "en": "Name"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "Name of the record"
+          }
+        },
+        "value": {
+          "Language": {
+            "typ": "language",
+            "langs": {}
+          }
+        },
+        "required": true,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "description",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "en": "Description"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "Model Description"
+          }
+        },
+        "value": {
+          "Language": {
+            "typ": "language",
+            "langs": {}
+          }
+        },
+        "required": true,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      }
+    ],
+    "workflows": ["delete_record"],
+    "services": ["delete_record"],
+    "record_right": "00000000-0000-0000-0000-000000000000",
+    "system": false
+  }

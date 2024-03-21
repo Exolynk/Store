@@ -1,0 +1,655 @@
+{
+    "uuid": "00000000-0000-0000-0000-000000000000",
+    "ident": "machine",
+    "version": {
+      "typ": "version",
+      "kind": "Number",
+      "version": "1"
+    },
+    "status": "draft",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "it": "Clienti Macchina",
+        "en": "Client Machine",
+        "fr": "Client Appareil",
+        "de": "Kunden Maschine"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "Maschinen",
+        "en": "Machine",
+        "fr": "Appareil"
+      }
+    },
+    "icon": "action-settings",
+    "layout": "maintenance/machine",
+    "variables": [
+      {
+        "ident": "files",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "en": "Files",
+            "de": "Dateien"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "Files",
+            "de": "Dateien"
+          }
+        },
+        "value": {
+          "List": {
+            "typ": "list",
+            "data": []
+          }
+        },
+        "required": false,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": {
+          "List": {
+            "restrict_value": {
+              "Reference": "00000000-0000-0000-0000-000000000000"
+            },
+            "restrict_setting": {
+              "Reference": {
+                "typ": {
+                  "RecordTyp": "file"
+                }
+              }
+            },
+            "add_at_bottom": false
+          }
+        }
+      },
+      {
+        "ident": "last_maintenance_datetime",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "de": "Letzte Wartung am",
+            "en": "Last maintenance"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "de": "Letzte Wartung am",
+            "en": "Last maintenance"
+          }
+        },
+        "value": {
+          "Datetime": "2023-10-15 18:08:45.831000064 +02:00:00"
+        },
+        "required": false,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "product_reference",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "fr": "Référence du produit",
+            "de": "Produkt Referenz",
+            "it": "Riferimento prodotto",
+            "en": "Product Reference"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "Product Reference",
+            "it": "Riferimento prodotto",
+            "fr": "Référence du produit",
+            "de": "Produkt Referenz"
+          }
+        },
+        "value": {
+          "Reference": "00000000-0000-0000-0000-000000000000"
+        },
+        "required": false,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": {
+          "Reference": {
+            "typ": {
+              "RecordTyp": "product"
+            }
+          }
+        }
+      },
+      {
+        "ident": "registered_on_string",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "fr": "Enregistré sur:",
+            "en": "Registered to:",
+            "de": "Registriert auf:",
+            "it": "Registrato il:"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "de": "Registriert auf:",
+            "it": "Registrato il:",
+            "fr": "Enregistré sur:",
+            "en": "Registered to:"
+          }
+        },
+        "value": {
+          "String": ""
+        },
+        "required": true,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "maintenance_base_price_float",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "en": "Maintenance base price (CHF)",
+            "fr": "Prix de base de la maintenance (CHF)",
+            "de": "Wartungs-Basispreis (CHF)",
+            "it": "Prezzo base di manutenzione (CHF)"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "it": "Prezzo base di manutenzione (CHF)",
+            "en": "Maintenance base price (CHF)",
+            "fr": "Prix de base de la maintenance (CHF)",
+            "de": "Wartungs-Basispreis (CHF)"
+          }
+        },
+        "value": {
+          "Float": 500.0
+        },
+        "required": false,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "qrcode_id_string",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "en": "QR Code ID",
+            "de": "QR Code ID",
+            "it": "QR Code ID",
+            "fr": "QR Code ID"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "fr": "QR Code ID",
+            "de": "QR Code ID",
+            "en": "QR Code ID",
+            "it": "QR Code ID"
+          }
+        },
+        "value": {
+          "String": ""
+        },
+        "required": true,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "serialnumber_string",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "en": "Serialnumber",
+            "de": "Seriennummer"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "Serialnumber",
+            "de": "Seriennummer"
+          }
+        },
+        "value": {
+          "String": ""
+        },
+        "required": true,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "service_report_table",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "en": "Service Report",
+            "de": "Service Report"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "Service Report",
+            "de": "Service Report"
+          }
+        },
+        "value": {
+          "Table": {
+            "typ": "table",
+            "entries": []
+          }
+        },
+        "required": false,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": {
+          "Table": {
+            "columns": [
+              {
+                "ident": "task",
+                "position": 2,
+                "name": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Task",
+                    "de": "Arbeit"
+                  }
+                },
+                "read_only": false,
+                "value": {
+                  "String": ""
+                },
+                "setting": {
+                  "String": {
+                    "typ": "Singleline"
+                  }
+                }
+              },
+              {
+                "ident": "time",
+                "position": 3,
+                "name": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Zeitaufwand (h)",
+                    "en": "Time (h)"
+                  }
+                },
+                "read_only": false,
+                "value": {
+                  "Float": 0.0
+                },
+                "setting": "None"
+              },
+              {
+                "ident": "date",
+                "position": 0,
+                "name": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Datum",
+                    "en": "Date"
+                  }
+                },
+                "read_only": false,
+                "value": {
+                  "Datetime": "2023-10-27 16:18:36.366000128 +02:00:00"
+                },
+                "setting": "None"
+              },
+              {
+                "ident": "invoiced",
+                "position": 4,
+                "name": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Invoiced",
+                    "de": "Verrechnet"
+                  }
+                },
+                "read_only": false,
+                "value": {
+                  "Bool": false
+                },
+                "setting": "None"
+              },
+              {
+                "ident": "product",
+                "position": 1,
+                "name": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Produkt",
+                    "en": "Product"
+                  }
+                },
+                "read_only": false,
+                "value": {
+                  "Reference": "00000000-0000-0000-0000-000000000000"
+                },
+                "setting": {
+                  "Reference": {
+                    "typ": {
+                      "RecordTyp": "product"
+                    }
+                  }
+                }
+              }
+            ],
+            "add_row_only": false,
+            "add_at_bottom": false
+          }
+        }
+      },
+      {
+        "ident": "maintenance_interval",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "de": "Wartungsintervall (Tage)",
+            "en": "Maintenance Interval (d)"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "Maintenance Interval",
+            "de": "Wartungsintervall"
+          }
+        },
+        "value": {
+          "Integer": 1100
+        },
+        "required": false,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "documentation_rtf",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "de": "Dokumentation"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "de": "Dokumentation"
+          }
+        },
+        "value": {
+          "String": ""
+        },
+        "required": false,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "A riche text field for general documentation purposes which can contain Text, Images or URLs",
+        "settings": {
+          "String": {
+            "typ": "Markdown"
+          }
+        }
+      },
+      {
+        "ident": "name",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "de": "Name (Kunde/Maschine)",
+            "en": "Name (Customer/Machine)"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "Name of the record"
+          }
+        },
+        "value": {
+          "Language": {
+            "typ": "language",
+            "langs": {}
+          }
+        },
+        "required": true,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "description",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "de": "Beschreibung (Kunde/Maschine)",
+            "en": "Description (Customer/Machine)"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "Model Description"
+          }
+        },
+        "value": {
+          "Language": {
+            "typ": "language",
+            "langs": {}
+          }
+        },
+        "required": true,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "highlight_color",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "en": "Highlight Color"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "Record Highlight Color"
+          }
+        },
+        "value": {
+          "Color": {
+            "typ": "color",
+            "color": ""
+          }
+        },
+        "required": true,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": "None"
+      },
+      {
+        "ident": "status",
+        "system": false,
+        "released": true,
+        "name": {
+          "typ": "language",
+          "langs": {
+            "en": "Status"
+          }
+        },
+        "description": {
+          "typ": "language",
+          "langs": {
+            "en": "The Status of the record"
+          }
+        },
+        "value": {
+          "Selection": {
+            "typ": "selection",
+            "selected": [
+              "new"
+            ],
+            "options": {
+              "maintenance": {
+                "typ": "language",
+                "langs": {
+                  "de": "Wartung fällig",
+                  "en": "Maintenance due"
+                }
+              },
+              "new": {
+                "typ": "language",
+                "langs": {
+                  "de": "Neu",
+                  "en": "New"
+                }
+              },
+              "active": {
+                "typ": "language",
+                "langs": {
+                  "de": "Aktiv",
+                  "en": "Active"
+                }
+              },
+              "inactive": {
+                "typ": "language",
+                "langs": {
+                  "en": "Inactive",
+                  "de": "Inaktiv"
+                }
+              }
+            }
+          }
+        },
+        "required": true,
+        "access": {
+          "00000000-0000-0000-0000-000000000000": "Write"
+        },
+        "gdpr": "",
+        "settings": {
+          "Selection": {
+            "mode": "Single",
+            "options": {
+              "active": {
+                "typ": "language",
+                "langs": {
+                  "en": "Active",
+                  "de": "Aktiv"
+                }
+              },
+              "inactive": {
+                "typ": "language",
+                "langs": {
+                  "en": "Inactive",
+                  "de": "Inaktiv"
+                }
+              },
+              "maintenance": {
+                "typ": "language",
+                "langs": {
+                  "de": "Wartung fällig",
+                  "en": "Maintenance due"
+                }
+              },
+              "new": {
+                "typ": "language",
+                "langs": {
+                  "de": "Neu",
+                  "en": "New"
+                }
+              }
+            },
+            "change_target": "Settings"
+          }
+        }
+      }
+    ],
+    "workflows": [
+      "maintenance/machine/dyn_date_next_maintenance",
+        "maintenance/machine/dyn_diff_days_next_maintenance",
+        "maintenance/machine/maintenance_workflow",
+        "maintenance/machine/open_client_app",
+        "maintenance/machine/maintenance_done_workflow",
+        "maintenance/machine/inactive_workflow",
+        "maintenance/machine/add_qrcode_id_workflow",
+        "maintenance/machine/active_workflow",
+        "delete_record"
+    ],
+    "services": [
+        "maintenance/machine/add_qrcode_id_service",
+        "maintenance/machine/set_status_service",
+        "delete_record"
+    ],
+    "record_right": "00000000-0000-0000-0000-000000000000",
+    "system": false
+  }

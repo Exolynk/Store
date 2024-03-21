@@ -1,0 +1,27 @@
+pub async fn main() {
+    let machines = exo::db::exec_sql("SELECT * FROM machine;").await?;
+    for machine in machines {
+        let value = machine.get_value("last_maintenance_datetime")?;
+
+        let maintenance_interval = machine.get_value("maintenance_interval")?;
+        let maintenance_interval = exo::Duration::from_days(maintenance_interval);
+        let next_maintenance = value + maintenance_interval;
+        let today = exo::DateTime::new();
+        let delta = next_maintenance - today;
+        let res = delta.whole_days();
+        if res <= 30 {
+            let status = machine.get_value("status")?;
+            status.set_selected_single("maintenance");
+
+            exo::db::update_record_value(machine.uuid, "status", status).await?;
+            exo::db::update_record_value(machine.uuid, "highlight_color", exo::Color::new("#EEBAB8")).await?;
+        }
+    }
+
+    Ok(())
+}
+
+pub async fn test() {
+    main().await?;
+    Ok(())
+}

@@ -1,0 +1,135 @@
+<home>
+    
+    <raw-html id="status-icon">
+        <div style="padding-top: 7%; display: flex; width: calc(100vw - 10px); justify-content: center;">
+            <div class="animation-ctn">
+                <div class="icon icon--order-success svg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="154px" height="154px">  
+                    <g fill="none" stroke="###COLOR###" stroke-width="2"> 
+                        <circle cx="77" cy="77" r="72" style="stroke-dasharray:480px, 480px; stroke-dashoffset: 960px;"></circle>
+                        <circle id="colored" fill="###COLOR###" cx="77" cy="77" r="72" style="stroke-dasharray:480px, 480px; stroke-dashoffset: 960px;"></circle>
+                        <polyline class="st0" stroke="#fff" stroke-width="10" points="###POINTS###" style="stroke-dasharray:100px, 100px; stroke-dashoffset: 200px;"/>   
+                    </g> 
+                    </svg>
+                </div>
+            </div>    
+        </div>  
+    </raw-html>
+    
+    <new-line/>
+    <raw-html id="data-fields" style ="display: flex; width: calc(100vw - 10px); justify-content: center;">
+        <div>
+            <p><strong>Registriert auf: </strong><span id="registeredOnDisplay">###NAME###</span> <i class="bi bi-question-circle" data-toggle="tooltip" data-placement="top" title="Nicht auf Sie registriert? Bitte kontaktieren Sie uns, wir ändern dies gerne."></i></p>
+            <p><strong>Serienummer: </strong><span id="serialnumberDisplay">###SNR###</span></p>
+            <p><strong>Letzte Wartung: </strong><span id="datetimeDisplay">###LAST_SERVICE###</span></p>
+            <p><strong>Wartungsintervall: </strong><span id="maintenanceIntervalDisplay">###INTERVAL###</span> Tage</p>
+            <p id="statusColorDisplay"><strong>Nächste Wartung: </strong><span id="nextMaintenanceDisplay">###NEXT_SERVICE###</span><span id="overdueDisplay"></span></p>
+        </div>
+    </raw-html>
+    
+    <raw-html id="error-msg" style ="display: flex; width: calc(100vw - 10px); justify-content: center;">
+        <div>
+            <p><span id="errorCodeDisplay" style="color: red">###ERROR_MSG###</span></p>
+        </div>
+    </raw-html>
+    
+    <raw-html>
+        <style>
+            /* Icon Animation */
+              .animation-ctn{
+                text-align:center;
+                margin-top:2em;
+              }
+              
+                  @-webkit-keyframes checkmark {
+                  0% {
+                      stroke-dashoffset: 100px
+                  }
+              
+                  100% {
+                      stroke-dashoffset: 200px
+                  }
+              }
+              
+              @-ms-keyframes checkmark {
+                  0% {
+                      stroke-dashoffset: 100px
+                  }
+              
+                  100% {
+                      stroke-dashoffset: 200px
+                  }
+              }
+              
+              @keyframes checkmark {
+                  0% {
+                      stroke-dashoffset: 100px
+                  }
+              
+                  100% {
+                      stroke-dashoffset: 0px
+                  }
+              }
+              
+              @-webkit-keyframes checkmark-circle {
+                  0% {
+                      stroke-dashoffset: 480px
+                 
+                  }
+              
+                  100% {
+                      stroke-dashoffset: 960px;
+                    
+                  }
+              }
+              
+              @-ms-keyframes checkmark-circle {
+                  0% {
+                      stroke-dashoffset: 240px
+                  }
+              
+                  100% {
+                      stroke-dashoffset: 480px
+                  }
+              }
+              
+              @keyframes checkmark-circle {
+                  0% {
+                      stroke-dashoffset: 480px 
+                  }
+              
+                  100% {
+                      stroke-dashoffset: 960px
+                  }
+              }
+              
+              @keyframes colored-circle { 
+                  0% {
+                      opacity:0
+                  }
+              
+                  100% {
+                      opacity:100
+                  }
+              }
+              
+              .inlinesvg .svg svg {
+                  display: inline
+              }
+              
+              .icon--order-success svg polyline {
+                  -webkit-animation: checkmark 0.25s ease-in-out 0.7s backwards;
+                  animation: checkmark 0.25s ease-in-out 0.7s backwards
+              }
+              
+              .icon--order-success svg circle {
+                  -webkit-animation: checkmark-circle 0.6s ease-in-out backwards;
+                  animation: checkmark-circle 0.6s ease-in-out backwards;
+              }
+              .icon--order-success svg circle#colored {
+                  -webkit-animation: colored-circle 0.6s ease-in-out 0.7s backwards;
+                  animation: colored-circle 0.6s ease-in-out 0.7s backwards;
+              }
+        </style>
+    </raw-html>
+</home>

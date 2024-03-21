@@ -1,0 +1,24 @@
+{
+    "ident": "dyn_diff_days_next_maintenance",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Dyn Diff Days next Maintenance"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "Dyn Diff Days next Maintenance"
+      }
+    },
+    "icon": "instance",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Workflow",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

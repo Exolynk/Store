@@ -1,0 +1,13 @@
+pub fn show() {
+    true
+}
+
+pub async fn main() {
+    exo::ui::navigate("https://exolynk.com/kontakt/", "_blank");
+    Ok(())
+}
+
+pub async fn test() {
+    main().await?;
+    Ok(())
+}

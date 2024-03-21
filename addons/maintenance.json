@@ -1,0 +1,20 @@
+{
+    "name": {
+      "typ": "language",
+      "langs": {
+        "en": "Maintenance Solution"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "en": "The complete Maintenance Solution Addon"
+      }
+    },
+  
+    "env_layout": "maintenance",
+    "env_workflows": ["maintenance/get_open_invoices_workflow"],
+    "env_services": ["maintenance/get_open_invoices_service", "maintenance/maintenance_overdue"],
+    "models": ["maintenance/machine", "maintenance/product", "maintenance/service_request"],
+    "pages": ["maintenance/open_invoices", "maintenance/public_status"]
+  }

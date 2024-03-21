@@ -1,0 +1,24 @@
+{
+    "ident": "get_open_invoices_workflow",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Get open service Invoices"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "Get open service Invoices Workflow"
+      }
+    },
+    "icon": "instance",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Workflow",
+    "focus": "Environment",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

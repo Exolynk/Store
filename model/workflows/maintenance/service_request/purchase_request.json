@@ -1,0 +1,24 @@
+{
+    "ident": "purchase_request",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "en": "Purchase Request"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "en": "Purchase Request Workflow"
+      }
+    },
+    "icon": "customer-order-entry",
+    "active": true,
+    "system": false,
+    "code": "pub fn show() {\n    let record = exo::get_record()?;\n    let status = record.get_value(\"status\").map(|s| s.get_selected_single()).unwrap_or(\"\");\n\n    if status != \"closed\" {\n        return true;\n    }\n    return false;\n}\n\npub async fn main() {\n    let record = exo::get_record()?;\n    exo::rpc_model(\"set_status_service\", [\"purchase_request\", \"rgb(66, 124, 172, 0.3)\"]).await?;\n    Ok(())\n}\n\npub async fn test() {\n    main().await?;\n}\n",
+    "typ": "Workflow",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

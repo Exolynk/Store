@@ -1,0 +1,24 @@
+{
+    "ident": "maintenance_overdue",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Status Wechsel wenn Service überfällig"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "Status Wechsel wenn Service überfällig Service"
+      }
+    },
+    "icon": "process",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Service",
+    "focus": "Environment",
+    "trigger": "EveryNight",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

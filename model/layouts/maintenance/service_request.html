@@ -1,0 +1,59 @@
+<record>
+    <!-- Infos -->
+    <tab name="Infos" active="true" status="">
+        <data name="Intern">
+            <variable ident="ident" />
+            <variable ident="name" />
+            <variable ident="description" />
+            <variable ident="status" />
+        </data>
+        <data name="Kunde">
+            <variable ident="client_reference" />
+        </data>
+        <data name="Planung">
+            <variable ident="calendar_start" name="Wartung von"/>
+            <variable ident="calendar_end" name="Wartung bis"/>
+        </data>
+        <data name="Zuständigkeit Techniker:in">
+            <variable ident="assigned_user_technician" />
+        </data>
+    </tab>
+    
+    <!-- Task -->
+    <tab name="Auftrag" active="true" status="">
+        <data name="Wartungs Auftrag">
+            <variable ident="maintenance_info" />
+            <variable ident="product_maintainance_reference_table" />
+        </data>
+    </tab>
+    
+    <!-- Ordering -->
+    <tab name="Bestellung" active="true" status="">
+        <data name="Bestellung">
+            <variable ident="assigned_user_buyer" />
+            <variable ident="purchase_request_table" />
+        </data>
+    </tab>
+    
+    <!-- Rapport -->
+    <tab name="Rapport" active="true" status="">
+        <data name="Arbeitsrapport">
+            <variable ident="maintainance_report_table" />
+            <variable ident="assigned_user_technician" />
+        </data>
+        <data name="Abnahme durch Kundinnen und Kunden">
+            <raw-html style="color: #E78C07; white-space: nowrap;">
+                <p style="color:#E78C07; white-space: nowrap;"><ui5-icon _ui5rt0="" _ui5host="" ui5-icon="" name="information" style="color:#E78C07; white-space: nowrap; vertical-align: middle;"></ui5-icon> Bitte vom Kunden signieren lassen</p>
+            </raw-html>
+            <variable ident="client_signature" />
+        </data>
+    </tab>
+    
+    <!-- Attachements -->
+    <tab name="Dateien" active="true" status="">
+        <data name="Dateien">
+            <variable ident="files" />
+        </data>
+        <files variable="files" />
+    </tab>
+</record>

@@ -1,0 +1,24 @@
+{
+    "ident": "get_open_invoices_service",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Get open Service Invoices"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "Get open Service Invoices Service"
+      }
+    },
+    "icon": "process",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Service",
+    "focus": "Environment",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

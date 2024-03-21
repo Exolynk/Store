@@ -1,0 +1,26 @@
+{
+    "ident": "in_process",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Wartung in Arbeit",
+        "en": "Maintenance in Process"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "en": "Maintenance in Process",
+        "de": "Wartung in Arbeit"
+      }
+    },
+    "icon": "in-progress",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Workflow",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

@@ -1,0 +1,24 @@
+{
+    "ident": "set_status_service",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "en": "Set Status Service"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "en": "Set Status Service"
+      }
+    },
+    "icon": "database",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Service",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

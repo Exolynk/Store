@@ -1,0 +1,26 @@
+{
+    "ident": "maintenance_workflow",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Wartung ausstehend",
+        "en": "Maintenance required"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "Wartung ausstehend Workflow",
+        "en": "Maintenance required Workflow"
+      }
+    },
+    "icon": "cancel-maintenance",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Workflow",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

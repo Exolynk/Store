@@ -1,0 +1,25 @@
+{
+    "ident": "open_client_app",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "en": "Client App",
+        "de": "Kunden App"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "Open Client App Workflow"
+      }
+    },
+    "icon": "internet-browser",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Workflow",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 9,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

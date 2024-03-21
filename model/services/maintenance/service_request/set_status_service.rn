@@ -1,0 +1,18 @@
+pub async fn main(status, color) {
+    let record = exo::get_record()?;
+    exo::db::update_record_value(record.uuid, "status", exo::Ident::new(status)).await?;
+    exo::db::update_record_value(record.uuid, "highlight_color", exo::Color::new(color)).await?;
+    if status == "active" {
+        exo::db::update_record_value(record.uuid, "last_maintenance_datetime", exo::DateTime::new()).await?;
+        let table = record.get_value("service_report_table")?;
+        let row = table.len();
+        table.set_value(row, "date", exo::DateTime::new());
+        table.set_value(row, "task", "Explain Maintenance Task");
+        exo::db::update_record_value(record.uuid, "service_report_table", table).await?;
+    }
+    Ok(true)
+}
+
+pub async fn test() {
+    main("active", "").await?;
+}

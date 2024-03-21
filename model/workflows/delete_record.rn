@@ -1,0 +1,29 @@
+pub fn show() {
+    return true;
+}
+
+pub async fn main() {
+    let lang = exo::get_user().get_value("language").map(|s| s.get_selected_single()).unwrap_or("en");
+
+    let title = match lang {
+        "de" => "Record löschen",
+        _ => "Delete Record",
+    };
+
+    let description = match lang {
+        "de" => "Bist du sicher, dass du diesen Datensatz löschen willst?",
+        _ => "Are you sure, to delete this record?",
+    };
+
+    let result = exo::ui::popup(title, description, []).await?;
+    if result.0 == false {
+        return Ok(());
+    }
+    exo::rpc_model("delete_record", []).await?;
+    exo::ui::reload();
+    Ok(())
+}
+
+pub async fn test() {
+    main().await?;
+}

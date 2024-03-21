@@ -1,0 +1,24 @@
+{
+    "ident": "dyn_date_next_maintenance",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Next Maintenance Date"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "Next Maintenance Date Workflow"
+      }
+    },
+    "icon": "instance",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Workflow",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

@@ -1,0 +1,8 @@
+pub async fn main(old, new) {
+    let res = exo::rpc_env("get_open_invoices_service", []).await?;
+    Ok(res)
+}
+
+pub async fn test() {
+    main("", "").await?;
+}

@@ -1,0 +1,113 @@
+pub fn show() {
+    false
+}
+
+pub async fn main(dom) {
+    // The result variables [status, name, snr, interval, last_service, next_service]
+    let res = match get_data().await {
+        Err(e) => {
+            dom = set_data_fields(dom, None)?;
+            dom = set_dom_color(dom, "inactive")?;
+            dom = set_status_icon(dom, "inactive")?;
+            dom = error_msg(dom, Some("Keine Maschiene gefunden"))?;
+            return Ok(dom);
+        }
+        Ok(res) => res,
+    };
+    // get status, we check for active | maintenance | inactive
+    let status = res.0;
+
+    dom = set_data_fields(dom, Some(res))?;
+    dom = set_dom_color(dom, status)?;
+    dom = set_status_icon(dom, status)?;
+    dom = error_msg(dom, None)?;
+    Ok(dom)
+}
+
+pub async fn test() {
+    Ok(())
+}
+
+async fn get_data() {
+    let query = exo::ui::UrlQuery::new();
+    let qr_code = query["qr_code"];
+    exo::rpc_page("get_machine", [qr_code]).await
+}
+
+/// Color the status icon
+fn set_status_icon(dom, status) {
+    // set the correct color & stroke position points
+    let cp = match status {
+        "active" => ("rgba(33, 136, 56, 1)", "43.5,77.8 63.7,97.9 112.2,49.4 "),
+        "maintenance" => ("rgb(231, 140, 7, 1)", "43.5,77.8  112.2,77.8 "),
+        _ => ("rgba(220, 53, 69, 1)", "43.5,77.8  112.2,77.8 "),
+    };
+    let color = cp.0;
+    let points = cp.1;
+
+    // replace the color placeholder with the actual color
+    let status_icon = dom.get_node_by_id("status-icon")?;
+    let html = status_icon.html;
+    html = html.replace("###COLOR###", color);
+    html = html.replace("###POINTS###", points);
+    status_icon.html = html;
+    dom.set_node_by_id("status-icon", status_icon);
+
+    // return the dom
+    Ok(dom)
+}
+
+/// Color the dom backrground
+fn set_dom_color(dom, status) {
+    // set the correct color
+    let color = match status {
+        "active" => "rgba(33, 136, 56, 0.2)",
+        "maintenance" => "rgb(231, 140, 7, 0.2)",
+        _ => "rgba(220, 53, 69, 0.2)",
+    };
+
+    dom.style = format!("background-color: {};", color);
+    Ok(dom)
+}
+
+/// Set the data fields
+fn set_data_fields(dom, res) {
+    let res = match res {
+        None => {
+            dom.set_node_by_id("data-fields", exo::dom::RawHtml::new());
+            return Ok(dom);
+        }
+        Some(m) => m,
+    };
+
+    // replace the placeholders with info
+    let fields_node = dom.get_node_by_id("data-fields")?;
+    let html = fields_node.html;
+    html = html.replace("###NAME###", res[1]);
+    html = html.replace("###SNR###", res[2]);
+    html = html.replace("###LAST_SERVICE###", res[4]);
+    html = html.replace("###INTERVAL###", res[3]);
+    html = html.replace("###NEXT_SERVICE###", res[5]);
+    fields_node.html = html;
+    dom.set_node_by_id("data-fields", fields_node);
+
+    // return the dom
+    Ok(dom)
+}
+
+fn error_msg(dom, msg) {
+    let msg = match msg {
+        None => {
+            dom.set_node_by_id("error-msg", exo::dom::RawHtml::new());
+            return Ok(dom);
+        }
+        Some(m) => m,
+    };
+
+    let fields_node = dom.get_node_by_id("error-msg")?;
+    let html = fields_node.html;
+    html = html.replace("###ERROR_MSG###", msg);
+    fields_node.html = html;
+    dom.set_node_by_id("error-msg", fields_node);
+    Ok(dom)
+}

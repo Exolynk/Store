@@ -1,0 +1,26 @@
+{
+    "ident": "inactive_workflow",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Maschine deaktivieren",
+        "en": "Maschine deactivate"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "en": "Maschine deactivate Workflow",
+        "de": "Maschine deaktivieren Workflow"
+      }
+    },
+    "icon": "status-error",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Workflow",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

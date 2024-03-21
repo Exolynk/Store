@@ -1,0 +1,26 @@
+{
+    "ident": "closed",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "en": "Closed",
+        "de": "Abgeschlossen"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "Wartung abgeschlossen",
+        "en": "Maintenance done"
+      }
+    },
+    "icon": "accept",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Workflow",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+}

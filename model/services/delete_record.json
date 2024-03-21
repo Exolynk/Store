@@ -1,0 +1,28 @@
+{
+    "ident": "delete_record",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "fr": "Supprimer",
+        "it": "Cancellare",
+        "en": "Delete",
+        "de": "Löschen"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "Record Löschen",
+        "en": "Delete the record"
+      }
+    },
+    "icon": "delete",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Service",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

@@ -1,0 +1,15 @@
+{
+  "uuid": "00000000-0000-0000-0000-000000000000",
+  "ident": "open_invoices",
+  "name": {
+    "typ": "language",
+    "langs": {
+      "de": "Open Invoices"
+    }
+  },
+  "active": true,
+  "public": false,
+  "layout": "maintenance/open_invoices",
+  "workflows": [],
+  "services": []
+}

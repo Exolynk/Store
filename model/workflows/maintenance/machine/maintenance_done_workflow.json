@@ -1,0 +1,26 @@
+{
+    "ident": "maintenance_done_workflow",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Wartung abgeschlossen",
+        "en": "Maintenance done"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "en": "Maintenance done Workflow",
+        "de": "Wartung abgeschlossen Workflow"
+      }
+    },
+    "icon": "task",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Workflow",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

@@ -1,0 +1,34 @@
+pub fn show() {
+    let record = exo::get_record()?;
+    let status = record.get_value("status").map(|s| s.get_selected_single()).unwrap_or("");
+
+    if status == "new" {
+        return true;
+    } else if status == "inactive" {
+        return true;
+    }
+    return false;
+}
+
+pub async fn main() {
+    let vars = [exo::Variable::new("qrcode", "")];
+    let result = exo::ui::popup("QR-Code ID zuweisen", "Neue QR-Code Nummer zuweisen", vars).await?;
+    if result.0 == false {
+        return Ok(());
+    }
+    let new_qrcode = result.1;
+    let new_qrcode = new_qrcode[0].value;
+    let result = exo::rpc_model("add_qrcode_id_service", [new_qrcode]).await?;
+    if result[0] {
+        exo::ui::notification("Positive", "QR-Code erfolgreich zugewiesen", 6000);
+    } else {
+        exo::ui::notification("Negative", "QR-Code existiert bereits", 6000);
+    }
+
+    Ok(())
+}
+
+pub async fn test() {
+    main().await?;
+    Ok(())
+}

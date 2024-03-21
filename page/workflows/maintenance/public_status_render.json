@@ -1,0 +1,24 @@
+{
+    "ident": "render",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Render Hook"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "Intercepts the rendering"
+      }
+    },
+    "icon": "internet-browser",
+    "active": true,
+    "system": false,
+    "code": "service/public_status_render",
+    "typ": "Workflow",
+    "focus": "Page",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

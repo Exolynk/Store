@@ -1,0 +1,26 @@
+{
+    "ident": "new",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Neu (for testing only!)",
+        "en": "New (for testing only!)"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "en": "New (for testing only!)",
+        "de": "Neu (for testing only!)"
+      }
+    },
+    "icon": "add-document",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Workflow",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

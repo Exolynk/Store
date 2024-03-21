@@ -1,0 +1,45 @@
+pub async fn main() {
+    // take the table value from the model
+    let model = exo::db::get_model("machine").await?;
+    let table = model.get_variable("service_report_table")?.value;
+
+    // get all records with this table and loop over them
+    let res = exo::db::exec_sql("SELECT service_report_table, uuid from machine;").await?;
+    for row in res {
+        if row.get("service_report_table").is_none() {
+            continue;
+        }
+        println!("{:?}",row["service_report_table"]);
+        // loop over each entry of the table
+        for i in 0..row["service_report_table"].len() {
+            let ti = table.len();
+            let invoiced = row["service_report_table"].get_value(i, "invoiced").unwrap_or(true);
+            // only add when invoiced flag is true
+            if invoiced == false {
+                table.set_value(ti, "date", row["service_report_table"].get_value(i, "date")?);
+                table.set_value(ti, "product", row["service_report_table"].get_value(i, "product")?);
+                table.set_value(ti, "task", row["service_report_table"].get_value(i, "task")?);
+                table.set_value(ti, "time", row["service_report_table"].get_value(i, "time")?);
+                table.set_value(ti, "invoiced", row["service_report_table"].get_value(i, "invoiced")?);
+                table.set_value(ti, "record", row["uuid"]);
+            }
+        }
+    }
+
+
+    // get the variable with the table from the model and set the new table data
+    let variable = model.get_variable("service_report_table")?;
+    variable.value = table;
+    // add the new column for the record data
+    let settings = variable.settings.get_table_settings()?;
+    let col = exo::vs::TableColumnSettings::new();
+    col.ident = exo::Ident::new("record");
+    col.name = exo::Language::new_en("Record");
+    settings.add(col);
+    variable.settings = exo::vs::VariableSettings::Table(settings);
+    Ok(variable)
+}
+
+pub async fn test() {
+    main().await?;
+}

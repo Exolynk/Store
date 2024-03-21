@@ -1,0 +1,19 @@
+{
+    "uuid": "00000000-0000-0000-0000-000000000000",
+    "ident": "public_status",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Public Machine Status"
+      }
+    },
+    "active": true,
+    "public": true,
+    "layout": "maintenance/public_status",
+    "workflows": [
+        "maintenance/public_status_render"
+    ],
+    "services": [
+      "maintenance/get_machine"
+    ]
+  }

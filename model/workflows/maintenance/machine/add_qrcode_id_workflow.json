@@ -1,0 +1,26 @@
+{
+    "ident": "add_qrcode_id_workflow",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "QR-Code zuweisen",
+        "en": "Allocate QR-Code"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "de": "QR-Code zuweisen Workflow",
+        "en": "Allocate QR-Code Workflow"
+      }
+    },
+    "icon": "qr-code",
+    "active": true,
+    "system": false,
+    "code": "",
+    "typ": "Workflow",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 8,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }

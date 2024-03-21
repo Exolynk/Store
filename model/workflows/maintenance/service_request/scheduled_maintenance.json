@@ -1,0 +1,26 @@
+{
+    "ident": "scheduled_maintenance",
+    "name": {
+      "typ": "language",
+      "langs": {
+        "de": "Wartung geplant",
+        "en": "Scheduled Maintenance"
+      }
+    },
+    "description": {
+      "typ": "language",
+      "langs": {
+        "en": "Scheduled Maintenance",
+        "de": "Wartung geplant"
+      }
+    },
+    "icon": "accelerated",
+    "active": true,
+    "system": false,
+    "code": "pub fn show() {\n    let record = exo::get_record()?;\n    let status = record.get_value(\"status\").map(|s| s.get_selected_single()).unwrap_or(\"\");\n\n    if status == \"new\" {\n        return true;\n    } else if status == \"purchase_request\" {\n        return true;\n    }\n    return false;\n}\n\npub async fn main() {\n    let record = exo::get_record()?;\n    exo::rpc_model(\"set_status_service\", [\"scheduled\", \"rgb(66, 124, 172, 0.3)\"]).await?;\n    Ok(())\n}\n\npub async fn test() {\n    main().await?;\n}\n",
+    "typ": "Workflow",
+    "focus": "Model",
+    "trigger": "None",
+    "order": 0,
+    "test_record": "00000000-0000-0000-0000-000000000000"
+  }
