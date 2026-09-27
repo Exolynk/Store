@@ -1,0 +1,16 @@
+pub async fn main(new_qrcode) {
+    let record = exo::get_record()?;
+
+    let query = exo::SqlQuery::new().model("machine").check("qrcode_id_string", "==", new_qrcode);
+    let records = exo::db::exec_sql(query).await?;
+    if records.len() > 0 {
+        return Ok(false);
+    }
+
+    exo::db::update_record_value(record.uuid, "qrcode_id_string", new_qrcode).await?;
+    Ok(true)
+}
+
+pub async fn test() {
+    main("new_qrcode").await?;
+}

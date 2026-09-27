@@ -1,0 +1,7 @@
+pub async fn main() {
+    let record = exo::get_record()?;
+    exo::db::delete_record(record.uuid).await;
+}
+
+pub async fn test() {
+}

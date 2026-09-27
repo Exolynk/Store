@@ -1,0 +1,24 @@
+pub async fn main(qr_code) {
+    exo::db::set_sudo(true);
+    let query = exo::SqlQuery::new().model("machine").check("qrcode_id_string", "==", qr_code);
+    let machine = exo::db::exec_sql(query).await?.get(0)?;
+
+    let last_service_date = machine.get_value("last_maintenance_datetime")?;
+    let service_interval = machine.get_value("maintenance_interval")?;
+    let next_service_date = (last_service_date + exo::Duration::from_days(service_interval));
+
+    let status = machine.get_value("status").unwrap_or(exo::Selection::new()).get_selected_single().unwrap_or("");
+    let name = machine.get_value("registered_on_string").unwrap_or("");
+    let snr = machine.get_value("serialnumber_string").unwrap_or("");
+    let interval = service_interval.to_string();
+    let last_service = format!("{}.{}.{}", last_service_date.day(), last_service_date.month(), last_service_date.year());
+    let next_service = format!("{}.{}.{}", next_service_date.day(), next_service_date.month(), next_service_date.year());
+
+    Ok([status, name, snr, interval, last_service, next_service])
+}
+
+pub async fn test() {
+    let res = main("abc").await?;
+    println!("{:?}", res);
+    Ok(())
+}

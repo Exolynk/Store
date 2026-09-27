@@ -1,0 +1,26 @@
+pub fn show() {
+    let record = exo::get_record()?;
+    let status = record.get_value("status").unwrap_or(exo::Selection::new()).get_selected_single().unwrap_or("");
+    if status == "active" {
+        return true;
+    } else if status == "" {
+        return true;
+    }
+    return false;
+}
+
+pub async fn main() {
+    let result = exo::ui::popup("Status auf 'Wartung ausstehend' ändern", "Bist du sicher, dass du den Status ändern willst? Die Maschine wird beim Kunden als 'Wartung nötig' angezeigt.", []).await?;
+    if result.0 == false {
+        return Ok(());
+    }
+
+    let record = exo::get_record()?;
+    exo::rpc_model("set_status_service", ["maintenance", "#EEBAB8"]).await?; //color: light-red
+
+    Ok(())
+}
+
+pub async fn test() {
+    main().await?;
+}

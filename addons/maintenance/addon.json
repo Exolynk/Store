@@ -1,0 +1,2565 @@
+{
+  "format_version": 1,
+  "ident": "maintenance",
+  "version": "1.0.0",
+  "name": {
+    "typ": "language",
+    "langs": {
+      "en": "Maintenance Solution"
+    }
+  },
+  "description": {
+    "typ": "language",
+    "langs": {
+      "en": "The complete Maintenance Solution Addon"
+    }
+  },
+  "environment_layout": "<home>\n    <highlight-button title=\"Benutzer\" text=\"Alle Benutzer\" icon=\"person-placeholder\" link=\"#/search?query[models][0]=user\" />\n    <highlight-button title=\"Dateien\" text=\"Alle Anhänge\" icon=\"attachment-photo\" link=\"#/search?query[models][0]=file&view=Tree\" />\n    <highlight-button title=\"Produkte Verzeichnis\" text=\"Alle Produkte\" icon=\"product\" link=\"#/search?query[models][0]=product&view=Table&cols=name+description+category_selection+\" />\n    <highlight-button title=\"QR-Codes Bestellen\" text=\"Neue Aufkleber bestellen\" icon=\"cart\" link=\"mailto:philippe@exolynk.com?&subject=QR%2DCode%20Bestellung%20%2D%20Korngold%20AG&body=Bitte%20folgende%20Anzahl%20an%20QR%2DCodes%20generieren%20und%20uns%20zusenden%3A%20\" />\n    \n    <new-line />\n    <highlight-button title=\"Alle Maschinen\" text=\"Alle Maschinen\" icon=\"action-settings\" link=\"#/search?query[models][0]=machine&view=Table&cols=registered_on_string+product_reference+status+dyn_diff_days_next_maintenance+dyn_date_next_maintenance+\" />\n    <highlight-button title=\"Anstehende Wartungen\" text=\"Anstehende Wartungen\" icon=\"wrench\" link=\"#/search?query[models][0]=machine&status[0]=maintenance&view=Table&cols=registered_on_string+product_reference+status+dyn_diff_days_next_maintenance+dyn_date_next_maintenance+\" />\n    \n    <new-line />\n    <highlight-button title=\"Wartungsaufträge\" text=\"Alle Wartungsaufträge\" icon=\"activity-items\" link=\"#/search?query[models][0]=maintenance_request\" />\n    <highlight-button title=\"Wartungsrechnungen\" text=\"Offene Wartungsrechnungen\" icon=\"task\" link=\"#/env_ident/page/open_invoices\" />\n    \n    <new-line />   \n    <!-- Wartungsumsatz nach Status -->\n    <chart typ=\"doughnut\" name=\"Wartungsumsatz nach Status (CHF)\">\n        <chart-data name=\"Überfällige Wartungen\" sql=\"SELECT sum(maintenance_base_price_float) FROM machine WHERE status='maintenance';\" />\n        <chart-data name=\"Anstehende Wartungen\" sql=\"SELECT sum(maintenance_base_price_float) FROM machine WHERE status='active';\" />\n        <chart-data name=\"Inaktive Maschinen\" sql=\"SELECT sum(maintenance_base_price_float) FROM machine WHERE status='inactive';\" />\n    </chart>\n</home>",
+  "environment_codes": [
+    {
+      "uuid": "00000000-0000-0000-0000-000000000000",
+      "owner": "Environment",
+      "ident": "get_open_invoices_workflow",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "de": "Get open service Invoices"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "de": "Get open service Invoices Workflow"
+        }
+      },
+      "icon": "instance",
+      "active": true,
+      "system": false,
+      "code": "",
+      "language": "Rune",
+      "kind": "Workflow",
+      "trigger": "None",
+      "endpoint_method": "Get",
+      "order": 0,
+      "test_record": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "uuid": "00000000-0000-0000-0000-000000000000",
+      "owner": "Environment",
+      "ident": "get_open_invoices_service",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "de": "Get open Service Invoices"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "de": "Get open Service Invoices Service"
+        }
+      },
+      "icon": "process",
+      "active": true,
+      "system": false,
+      "code": "",
+      "language": "Rune",
+      "kind": "Service",
+      "trigger": "None",
+      "endpoint_method": "Get",
+      "order": 0,
+      "test_record": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "uuid": "00000000-0000-0000-0000-000000000000",
+      "owner": "Environment",
+      "ident": "maintenance_overdue",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "de": "Status Wechsel wenn Service überfällig"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "de": "Status Wechsel wenn Service überfällig Service"
+        }
+      },
+      "icon": "process",
+      "active": true,
+      "system": false,
+      "code": "",
+      "language": "Rune",
+      "kind": "Service",
+      "trigger": "EveryNight",
+      "endpoint_method": "Get",
+      "order": 0,
+      "test_record": "00000000-0000-0000-0000-000000000000"
+    }
+  ],
+  "models": [
+    {
+      "uuid": "00000000-0000-0000-0000-000000000000",
+      "ident": "machine",
+      "version": {
+        "typ": "version",
+        "kind": "Number",
+        "version": "1"
+      },
+      "status": "draft",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "it": "Clienti Macchina",
+          "en": "Client Machine",
+          "fr": "Client Appareil",
+          "de": "Kunden Maschine"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "de": "Maschinen",
+          "en": "Machine",
+          "fr": "Appareil"
+        }
+      },
+      "icon": "action-settings",
+      "layout": "<record>\n    <!-- Maschine Information -->\n    <tab name=\"Produkt Information\" active=\"true\">\n        <data name=\"Maschine\" collapsed=\"false\">\n            <variable ident=\"name\" name=\"Name (Kunde/Maschine)\" />\n            <variable ident=\"description\" name=\"Beschreibung (Kunde/Maschine)\" />\n            <variable ident=\"registered_on_string\" name=\"Registriert auf (wird in Kunden App angezeigt)\"/>\n            <variable ident=\"serialnumber_string\" name=\"Serienummer (wird in Kunden App angezeigt)\" />\n            <variable ident=\"product_reference\" />\n            <variable ident=\"status\" name=\"Status (Aktiv / Wartung fällig / Inaktiv)\" />\n        </data>\n        \n        <data name=\"Wartung\" collapsed=\"true\">\n            <variable ident=\"maintenance_base_price_float\"/>\n            <variable ident=\"registered_on_string\"/>\n            <variable ident=\"maintenance_interval\"/>\n            <variable ident=\"last_maintenance_datetime\"/>\n            <variable name=\"Tage bis nächste Wartung\" workflow=\"dyn_diff_days_next_maintenance\" />\n            <variable name=\"Nächste Wartung fällig am\" workflow=\"dyn_date_next_maintenance\" />\n        </data>\n        \n        <data name=\"QR Code\" collapsed=\"true\">\n            <raw-html style=\"color: #E78C07; white-space: nowrap;\">\n                <p style=\"color:#E78C07; white-space: nowrap;\"><ui5-icon name=\"information\" style=\"color:#E78C07; white-space: nowrap; vertical-align: middle;\"></ui5-icon> QR-Code muss hinterlegt sein, damit Scanning funktioniert! Code darf nicht doppelt verwendet werden! </p>\n            </raw-html>\n            <variable ident=\"qrcode_id_string\" />\n        </data>\n        \n    </tab>\n    \n    <!-- Attachements -->\n    <tab name=\"Dateien\" active=\"true\" >\n        <files variable=\"files\" />\n    </tab>\n    \n    <!-- Service Report -->\n    <tab name=\"Service Report\" active=\"true\" >\n        <data name=\"Service Report\">\n            <variable ident=\"service_report_table\" />\n        </data>\n    </tab>\n    \n    <!-- Tab Dokumentation -->    \n    <tab name=\"Dokumentation\">\n        <data name=\"Dokumentation\" collapsed=\"false\">\n            <raw-html>\n                <p style=\"color:#E78C07; font-size:14px; margin-bottom:-20px; margin-top:-2px;\"><strong> Wichtig! </strong>Nach jeder Änderung mit dem <ui5-icon name=\"save\" style=\"color:#E78C07; font-size:14px;\"> </ui5-icon> Button speichern.</p>\n            </raw-html>\n            <variable ident=\"documentation_rtf\" />\n        </data>\n    </tab>\n    \n    <!-- Tab Logs -->    \n    <tab name=\"Logs\">\n        <record-logs />\n    </tab>\n</record>",
+      "variables": [
+        {
+          "ident": "files",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Files",
+              "de": "Dateien"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Files",
+              "de": "Dateien"
+            }
+          },
+          "value": {
+            "List": {
+              "typ": "list",
+              "data": []
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "List": {
+              "restrict_value": {
+                "Reference": "00000000-0000-0000-0000-000000000000"
+              },
+              "restrict_setting": {
+                "Reference": {
+                  "typ": {
+                    "RecordTyp": "file"
+                  }
+                }
+              },
+              "add_at_bottom": false
+            }
+          }
+        },
+        {
+          "ident": "last_maintenance_datetime",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Letzte Wartung am",
+              "en": "Last maintenance"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Letzte Wartung am",
+              "en": "Last maintenance"
+            }
+          },
+          "value": {
+            "Datetime": "2023-10-15 18:08:45.831000064 +02:00:00"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "product_reference",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "fr": "Référence du produit",
+              "de": "Produkt Referenz",
+              "it": "Riferimento prodotto",
+              "en": "Product Reference"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Product Reference",
+              "it": "Riferimento prodotto",
+              "fr": "Référence du produit",
+              "de": "Produkt Referenz"
+            }
+          },
+          "value": {
+            "Reference": "00000000-0000-0000-0000-000000000000"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Reference": {
+              "typ": {
+                "RecordTyp": "product"
+              }
+            }
+          }
+        },
+        {
+          "ident": "registered_on_string",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "fr": "Enregistré sur:",
+              "en": "Registered to:",
+              "de": "Registriert auf:",
+              "it": "Registrato il:"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Registriert auf:",
+              "it": "Registrato il:",
+              "fr": "Enregistré sur:",
+              "en": "Registered to:"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "maintenance_base_price_float",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Maintenance base price (CHF)",
+              "fr": "Prix de base de la maintenance (CHF)",
+              "de": "Wartungs-Basispreis (CHF)",
+              "it": "Prezzo base di manutenzione (CHF)"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "it": "Prezzo base di manutenzione (CHF)",
+              "en": "Maintenance base price (CHF)",
+              "fr": "Prix de base de la maintenance (CHF)",
+              "de": "Wartungs-Basispreis (CHF)"
+            }
+          },
+          "value": {
+            "Float": 500
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "qrcode_id_string",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "QR Code ID",
+              "de": "QR Code ID",
+              "it": "QR Code ID",
+              "fr": "QR Code ID"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "fr": "QR Code ID",
+              "de": "QR Code ID",
+              "en": "QR Code ID",
+              "it": "QR Code ID"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "serialnumber_string",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Serialnumber",
+              "de": "Seriennummer"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Serialnumber",
+              "de": "Seriennummer"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "service_report_table",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Service Report",
+              "de": "Service Report"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Service Report",
+              "de": "Service Report"
+            }
+          },
+          "value": {
+            "Table": {
+              "typ": "table",
+              "entries": []
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Table": {
+              "columns": [
+                {
+                  "ident": "task",
+                  "position": 2,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "en": "Task",
+                      "de": "Arbeit"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "String": ""
+                  },
+                  "setting": {
+                    "String": {
+                      "typ": "Singleline"
+                    }
+                  }
+                },
+                {
+                  "ident": "time",
+                  "position": 3,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "de": "Zeitaufwand (h)",
+                      "en": "Time (h)"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "Float": 0
+                  },
+                  "setting": "None"
+                },
+                {
+                  "ident": "date",
+                  "position": 0,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "de": "Datum",
+                      "en": "Date"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "Datetime": "2023-10-27 16:18:36.366000128 +02:00:00"
+                  },
+                  "setting": "None"
+                },
+                {
+                  "ident": "invoiced",
+                  "position": 4,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "en": "Invoiced",
+                      "de": "Verrechnet"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "Bool": false
+                  },
+                  "setting": "None"
+                },
+                {
+                  "ident": "product",
+                  "position": 1,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "de": "Produkt",
+                      "en": "Product"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "Reference": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "setting": {
+                    "Reference": {
+                      "typ": {
+                        "RecordTyp": "product"
+                      }
+                    }
+                  }
+                }
+              ],
+              "add_row_only": false,
+              "add_at_bottom": false
+            }
+          }
+        },
+        {
+          "ident": "maintenance_interval",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Wartungsintervall (Tage)",
+              "en": "Maintenance Interval (d)"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Maintenance Interval",
+              "de": "Wartungsintervall"
+            }
+          },
+          "value": {
+            "Integer": 1100
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "documentation_rtf",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Dokumentation"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Dokumentation"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "A riche text field for general documentation purposes which can contain Text, Images or URLs",
+          "settings": {
+            "String": {
+              "typ": "Markdown"
+            }
+          }
+        },
+        {
+          "ident": "name",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Name (Kunde/Maschine)",
+              "en": "Name (Customer/Machine)"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Name of the record"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "description",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Beschreibung (Kunde/Maschine)",
+              "en": "Description (Customer/Machine)"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Model Description"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "highlight_color",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Highlight Color"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Record Highlight Color"
+            }
+          },
+          "value": {
+            "Color": {
+              "typ": "color",
+              "color": ""
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "status",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Status"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "The Status of the record"
+            }
+          },
+          "value": {
+            "Selection": {
+              "typ": "selection",
+              "selected": [
+                "new"
+              ],
+              "options": {
+                "maintenance": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Wartung fällig",
+                    "en": "Maintenance due"
+                  }
+                },
+                "new": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Neu",
+                    "en": "New"
+                  }
+                },
+                "active": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Aktiv",
+                    "en": "Active"
+                  }
+                },
+                "inactive": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Inactive",
+                    "de": "Inaktiv"
+                  }
+                }
+              }
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Selection": {
+              "mode": "Single",
+              "options": {
+                "active": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Active",
+                    "de": "Aktiv"
+                  }
+                },
+                "inactive": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Inactive",
+                    "de": "Inaktiv"
+                  }
+                },
+                "maintenance": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Wartung fällig",
+                    "en": "Maintenance due"
+                  }
+                },
+                "new": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Neu",
+                    "en": "New"
+                  }
+                }
+              },
+              "change_target": "Settings"
+            }
+          }
+        }
+      ],
+      "workflows": [
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "dyn_date_next_maintenance",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Next Maintenance Date"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Next Maintenance Date Workflow"
+            }
+          },
+          "icon": "instance",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "dyn_diff_days_next_maintenance",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Dyn Diff Days next Maintenance"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Dyn Diff Days next Maintenance"
+            }
+          },
+          "icon": "instance",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "maintenance_workflow",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Wartung ausstehend",
+              "en": "Maintenance required"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Wartung ausstehend Workflow",
+              "en": "Maintenance required Workflow"
+            }
+          },
+          "icon": "cancel-maintenance",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "open_client_app",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Client App",
+              "de": "Kunden App"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Open Client App Workflow"
+            }
+          },
+          "icon": "internet-browser",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 9,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "maintenance_done_workflow",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Wartung abgeschlossen",
+              "en": "Maintenance done"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Maintenance done Workflow",
+              "de": "Wartung abgeschlossen Workflow"
+            }
+          },
+          "icon": "task",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "inactive_workflow",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Maschine deaktivieren",
+              "en": "Maschine deactivate"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Maschine deactivate Workflow",
+              "de": "Maschine deaktivieren Workflow"
+            }
+          },
+          "icon": "status-error",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "add_qrcode_id_workflow",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "QR-Code zuweisen",
+              "en": "Allocate QR-Code"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "QR-Code zuweisen Workflow",
+              "en": "Allocate QR-Code Workflow"
+            }
+          },
+          "icon": "qr-code",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 8,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "active_workflow",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Maschine aktivieren",
+              "en": "Maschine activate"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Maschine activate Workflow",
+              "de": "Maschine aktivieren Workflow"
+            }
+          },
+          "icon": "status-positive",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "delete_record",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "fr": "Supprimer",
+              "it": "Cancellare",
+              "en": "Delete",
+              "de": "Löschen"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Record Löschen",
+              "en": "Delete the record"
+            }
+          },
+          "icon": "delete",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "services": [
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "add_qrcode_id_service",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Allocate QR-Code",
+              "de": "QR-Code zuweisen"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Allocate QR-Code Service",
+              "de": "QR-Code zuweisen Service"
+            }
+          },
+          "icon": "qr-code",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Service",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 8,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "set_status_service",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Set Status Service"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Set Status Service"
+            }
+          },
+          "icon": "database",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Service",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "delete_record",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "fr": "Supprimer",
+              "it": "Cancellare",
+              "en": "Delete",
+              "de": "Löschen"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Record Löschen",
+              "en": "Delete the record"
+            }
+          },
+          "icon": "delete",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Service",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "record_right": "00000000-0000-0000-0000-000000000000",
+      "system": false,
+      "hide_open_button": false,
+      "hide_edit_button": false,
+      "hide_create_button": false,
+      "hide_favorite_button": false
+    },
+    {
+      "uuid": "00000000-0000-0000-0000-000000000000",
+      "ident": "product",
+      "version": {
+        "typ": "version",
+        "kind": "Number",
+        "version": "1"
+      },
+      "status": "draft",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "fr": "Type d'appareil",
+          "de": "Produkt Typ",
+          "it": "Tipo di apparecchio",
+          "en": "Product Type"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "de": "Produkt",
+          "fr": "Produit",
+          "en": "Product"
+        }
+      },
+      "icon": "product",
+      "layout": "<record>\n    <!-- Produkt Information -->\n    <tab name=\"Produkt Informationen\" active=\"true\">\n        <data name=\"Information\">\n            <variable ident=\"name\" />\n            <variable ident=\"description\" />\n            <variable ident=\"service_interval_int\" />\n        </data>\n        \n        <data name=\"Einkauf\" collapsed=\"true\">\n            <variable ident=\"purchase_price_float\" />\n            <variable ident=\"selling_price_float\" />\n        </data>\n    </tab>\n        \n    <!-- Tab Documentation -->    \n    <tab name=\"Dokumentation\">\n        <data name=\"Dokumentation\" collapsed=\"false\">\n            <raw-html>\n                <p style=\"color:#E78C07; font-size:14px; margin-bottom:-20px; margin-top:-2px;\"><strong> Wichtig! </strong>Nach jeder Änderung mit dem <ui5-icon name=\"save\" style=\"color:#E78C07; font-size:14px;\"> </ui5-icon> Button speichern.</p>\n            </raw-html>\n            <variable ident=\"documentation\" />\n        </data>\n    </tab>\n    \n    <!-- Tab Files -->    \n    <tab name=\"Dateien\" active=\"true\" status=\"\">\n        <data name=\"Dateien\" collapsed=\"true\">\n            <variable ident=\"files\" />\n        </data>    \n        <files variable=\"files\" />\n    </tab>\n\n    <!-- Tab Logs -->   \n    <tab name=\"Logs\">\n        <record-logs />\n    </tab>\n\n</record>",
+      "variables": [
+        {
+          "ident": "documentation",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Documentation",
+              "de": "Dokumentation"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Documentation",
+              "de": "Dokumentation"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "A riche text field for general documentation purposes",
+          "settings": {
+            "String": {
+              "typ": "Markdown"
+            }
+          }
+        },
+        {
+          "ident": "purchase_price_float",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Einstandspreis",
+              "en": "Purchase Price"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Purchase Price",
+              "de": "Einstandspreis"
+            }
+          },
+          "value": {
+            "Float": 0
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "selling_price_float",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Selling Price",
+              "de": "Verkaufspreis"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Verkaufspreis",
+              "en": "Selling Price"
+            }
+          },
+          "value": {
+            "Float": 0
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "service_interval_int",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Maintenance Interval (d)",
+              "de": "Wartungsintervall (t)",
+              "fr": "Intervalle de maintenance (j)",
+              "it": "Intervallo di manutenzione (g)"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Wartungsintervall",
+              "en": "Maintenance Interval (m)"
+            }
+          },
+          "value": {
+            "Integer": 0
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "files",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Files",
+              "de": "Dateien"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Files",
+              "de": "Dateien"
+            }
+          },
+          "value": {
+            "List": {
+              "typ": "list",
+              "data": []
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "List": {
+              "restrict_value": {
+                "Reference": "00000000-0000-0000-0000-000000000000"
+              },
+              "restrict_setting": {
+                "Reference": {
+                  "typ": {
+                    "RecordTyp": "file"
+                  }
+                }
+              },
+              "add_at_bottom": false
+            }
+          }
+        },
+        {
+          "ident": "name",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Name"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Name of the record"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "description",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Description"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Model Description"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        }
+      ],
+      "workflows": [
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "delete_record",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "fr": "Supprimer",
+              "it": "Cancellare",
+              "en": "Delete",
+              "de": "Löschen"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Record Löschen",
+              "en": "Delete the record"
+            }
+          },
+          "icon": "delete",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "services": [
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "delete_record",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "fr": "Supprimer",
+              "it": "Cancellare",
+              "en": "Delete",
+              "de": "Löschen"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Record Löschen",
+              "en": "Delete the record"
+            }
+          },
+          "icon": "delete",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Service",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "record_right": "00000000-0000-0000-0000-000000000000",
+      "system": false,
+      "hide_open_button": false,
+      "hide_edit_button": false,
+      "hide_create_button": false,
+      "hide_favorite_button": false
+    },
+    {
+      "uuid": "00000000-0000-0000-0000-000000000000",
+      "ident": "maintenance_request",
+      "version": {
+        "typ": "version",
+        "kind": "Number",
+        "version": "1"
+      },
+      "status": "draft",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "en": "Maintenance request",
+          "de": "Wartungsauftrag"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "de": "Wartungsauftrag",
+          "en": "Maintenance request"
+        }
+      },
+      "icon": "wrench",
+      "layout": "<record>\n    <!-- Infos -->\n    <tab name=\"Infos\" active=\"true\" status=\"\">\n        <data name=\"Intern\">\n            <variable ident=\"ident\" />\n            <variable ident=\"name\" />\n            <variable ident=\"description\" />\n            <variable ident=\"status\" />\n        </data>\n        <data name=\"Kunde\">\n            <variable ident=\"client_reference\" />\n        </data>\n        <data name=\"Planung\">\n            <variable ident=\"calendar_start\" name=\"Wartung von\"/>\n            <variable ident=\"calendar_end\" name=\"Wartung bis\"/>\n        </data>\n        <data name=\"Zuständigkeit Techniker:in\">\n            <variable ident=\"assigned_user_technician\" />\n        </data>\n    </tab>\n    \n    <!-- Task -->\n    <tab name=\"Auftrag\" active=\"true\" status=\"\">\n        <data name=\"Wartungs Auftrag\">\n            <variable ident=\"maintenance_info\" />\n            <variable ident=\"product_maintainance_reference_table\" />\n        </data>\n    </tab>\n    \n    <!-- Ordering -->\n    <tab name=\"Bestellung\" active=\"true\" status=\"\">\n        <data name=\"Bestellung\">\n            <variable ident=\"assigned_user_buyer\" />\n            <variable ident=\"purchase_request_table\" />\n        </data>\n    </tab>\n    \n    <!-- Rapport -->\n    <tab name=\"Rapport\" active=\"true\" status=\"\">\n        <data name=\"Arbeitsrapport\">\n            <variable ident=\"maintainance_report_table\" />\n            <variable ident=\"assigned_user_technician\" />\n        </data>\n        <data name=\"Abnahme durch Kundinnen und Kunden\">\n            <raw-html style=\"color: #E78C07; white-space: nowrap;\">\n                <p style=\"color:#E78C07; white-space: nowrap;\"><ui5-icon _ui5rt0=\"\" _ui5host=\"\" ui5-icon=\"\" name=\"information\" style=\"color:#E78C07; white-space: nowrap; vertical-align: middle;\"></ui5-icon> Bitte vom Kunden signieren lassen</p>\n            </raw-html>\n            <variable ident=\"client_signature\" />\n        </data>\n    </tab>\n    \n    <!-- Attachements -->\n    <tab name=\"Dateien\" active=\"true\" status=\"\">\n        <data name=\"Dateien\">\n            <variable ident=\"files\" />\n        </data>\n        <files variable=\"files\" />\n    </tab>\n</record>",
+      "variables": [
+        {
+          "ident": "client_reference",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Client",
+              "de": "Kunde"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Kunde",
+              "en": "Client"
+            }
+          },
+          "value": {
+            "Reference": "00000000-0000-0000-0000-000000000000"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Reference": {
+              "typ": {
+                "RecordTyp": "client"
+              }
+            }
+          }
+        },
+        {
+          "ident": "assigned_user_technician",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Service Techniker:in",
+              "en": "Responsible Technician"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Responsible Technician",
+              "de": "Service Techniker:in"
+            }
+          },
+          "value": {
+            "Reference": "00000000-0000-0000-0000-000000000000"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Reference": {
+              "typ": {
+                "RecordTyp": "user"
+              }
+            }
+          }
+        },
+        {
+          "ident": "assigned_user_buyer",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Einkäufer:in",
+              "en": "Buyer"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Einkäufer:in",
+              "en": "Buyer"
+            }
+          },
+          "value": {
+            "Reference": "00000000-0000-0000-0000-000000000000"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Reference": {
+              "typ": {
+                "RecordTyp": "user"
+              }
+            }
+          }
+        },
+        {
+          "ident": "product_maintainance_reference_table",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Zu wartende Investitionsgüter",
+              "en": "to maintain investement goods"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "to maintain investement goods",
+              "de": "Zu wartende Investitionsgüter"
+            }
+          },
+          "value": {
+            "Table": {
+              "typ": "table",
+              "entries": []
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Table": {
+              "columns": [
+                {
+                  "ident": "product",
+                  "position": 0,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "en": "Product",
+                      "de": "Produkt"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "Reference": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "setting": {
+                    "Reference": {
+                      "typ": {
+                        "RecordTyp": "equipment"
+                      }
+                    }
+                  }
+                },
+                {
+                  "ident": "serial",
+                  "position": 1,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "en": "Serial number",
+                      "de": "Seriennummer"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "String": ""
+                  },
+                  "setting": {
+                    "String": {
+                      "typ": "Singleline"
+                    }
+                  }
+                }
+              ],
+              "add_row_only": false,
+              "add_at_bottom": false
+            }
+          }
+        },
+        {
+          "ident": "purchase_request_table",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Purchase Request",
+              "de": "Bestellanfrage"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Purchase Request",
+              "de": "Bestellanfrage"
+            }
+          },
+          "value": {
+            "Table": {
+              "typ": "table",
+              "entries": []
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Table": {
+              "columns": [
+                {
+                  "ident": "quantity",
+                  "position": 0,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "de": "Anz.",
+                      "en": "QTY"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "Integer": 0
+                  },
+                  "setting": "None"
+                },
+                {
+                  "ident": "article",
+                  "position": 1,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "en": "Article",
+                      "de": "Artikel"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "String": ""
+                  },
+                  "setting": {
+                    "String": {
+                      "typ": "Singleline"
+                    }
+                  }
+                },
+                {
+                  "ident": "part_number",
+                  "position": 2,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "de": "Teilenummer",
+                      "en": "Part Number"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "String": ""
+                  },
+                  "setting": {
+                    "String": {
+                      "typ": "Singleline"
+                    }
+                  }
+                },
+                {
+                  "ident": "vendor",
+                  "position": 3,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "de": "Lieferant",
+                      "en": "Vendor"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "String": ""
+                  },
+                  "setting": "None"
+                }
+              ],
+              "add_row_only": false,
+              "add_at_bottom": false
+            }
+          }
+        },
+        {
+          "ident": "client_signature",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Kunden Unterschrift",
+              "en": "Client Signature"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Kunden Unterschrift",
+              "en": "Client Signature"
+            }
+          },
+          "value": {
+            "Signature": {
+              "typ": "signature",
+              "location": {
+                "typ": "location",
+                "house_number": "",
+                "road": "",
+                "town": "",
+                "state": "",
+                "postcode": "",
+                "country": "",
+                "lat": 0,
+                "lon": 0,
+                "validated": false
+              },
+              "datetime": "2023-07-15 19:13:07.351000064 +02:00:00",
+              "signature": "",
+              "user": "00000000-0000-0000-0000-000000000000",
+              "signed": false
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "maintenance_info",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Beschreibung Wartungsauftrag",
+              "en": "Addition Maintenance Description"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Addition Maintenance Description",
+              "de": "Beschreibung Wartungsauftrag"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "String": {
+              "typ": "Multiline"
+            }
+          }
+        },
+        {
+          "ident": "maintainance_report_table",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Service Rapport",
+              "en": "Maintenance Report"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Maintenance Report",
+              "de": "Service Rapport"
+            }
+          },
+          "value": {
+            "Table": {
+              "typ": "table",
+              "entries": [
+                {
+                  "ident": "product",
+                  "row": 0,
+                  "value": {
+                    "Reference": "00000000-0000-0000-0000-000000000000"
+                  }
+                },
+                {
+                  "ident": "task",
+                  "row": 0,
+                  "value": {
+                    "String": ""
+                  }
+                }
+              ]
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Table": {
+              "columns": [
+                {
+                  "ident": "product",
+                  "position": 0,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "de": "Produkt",
+                      "en": "Product"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "Reference": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "setting": {
+                    "Reference": {
+                      "typ": {
+                        "RecordTyp": "product"
+                      }
+                    }
+                  }
+                },
+                {
+                  "ident": "task",
+                  "position": 1,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "en": "Task",
+                      "de": "Arbeit"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "String": ""
+                  },
+                  "setting": {
+                    "String": {
+                      "typ": "Singleline"
+                    }
+                  }
+                },
+                {
+                  "ident": "time",
+                  "position": 2,
+                  "name": {
+                    "typ": "language",
+                    "langs": {
+                      "en": "Time (h)",
+                      "de": "Zeitaufwand (h)"
+                    }
+                  },
+                  "read_only": false,
+                  "value": {
+                    "Float": 0
+                  },
+                  "setting": "None"
+                }
+              ],
+              "add_row_only": false,
+              "add_at_bottom": false
+            }
+          }
+        },
+        {
+          "ident": "name",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Name"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Name of the record"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "description",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Description"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Model Description"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "highlight_color",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Highlight Color"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Record Highlight Color"
+            }
+          },
+          "value": {
+            "Color": {
+              "typ": "color",
+              "color": ""
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "calendar_start",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Wartung von",
+              "en": "Service start"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Wartung von",
+              "en": "Service start"
+            }
+          },
+          "value": {
+            "Datetime": "1970-01-01 00:00:00.0 +00:00:00"
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "calendar_end",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Wartung bis",
+              "en": "Service end"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Wartung bis",
+              "en": "Service end"
+            }
+          },
+          "value": {
+            "Datetime": "1970-01-01 00:00:00.0 +00:00:00"
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "status",
+          "system": false,
+          "released": false,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Status"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "The Status of the record"
+            }
+          },
+          "value": {
+            "Selection": {
+              "typ": "selection",
+              "selected": [
+                "new"
+              ],
+              "options": {
+                "purchase_request": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Bestellanforderung",
+                    "en": "Purchase Request"
+                  }
+                },
+                "new": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "neu",
+                    "en": "new"
+                  }
+                },
+                "scheduled": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "scheduled",
+                    "de": "geplant"
+                  }
+                },
+                "in_process": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "in Bearbeitung",
+                    "en": "in Process"
+                  }
+                },
+                "closed": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "abgeschlossen",
+                    "en": "closed"
+                  }
+                }
+              }
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        }
+      ],
+      "workflows": [
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "in_process",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Wartung in Arbeit",
+              "en": "Maintenance in Process"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Maintenance in Process",
+              "de": "Wartung in Arbeit"
+            }
+          },
+          "icon": "in-progress",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "closed",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Closed",
+              "de": "Abgeschlossen"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Wartung abgeschlossen",
+              "en": "Maintenance done"
+            }
+          },
+          "icon": "accept",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "new",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Neu (for testing only!)",
+              "en": "New (for testing only!)"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "New (for testing only!)",
+              "de": "Neu (for testing only!)"
+            }
+          },
+          "icon": "add-document",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "scheduled_maintenance",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Wartung geplant",
+              "en": "Scheduled Maintenance"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Scheduled Maintenance",
+              "de": "Wartung geplant"
+            }
+          },
+          "icon": "accelerated",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "purchase_request",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Purchase Request"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Purchase Request Workflow"
+            }
+          },
+          "icon": "customer-order-entry",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "delete_record",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "fr": "Supprimer",
+              "it": "Cancellare",
+              "en": "Delete",
+              "de": "Löschen"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Record Löschen",
+              "en": "Delete the record"
+            }
+          },
+          "icon": "delete",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "services": [
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "set_status_service",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Set Status Service"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Set Status Service"
+            }
+          },
+          "icon": "database",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Service",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Model": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "delete_record",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "fr": "Supprimer",
+              "it": "Cancellare",
+              "en": "Delete",
+              "de": "Löschen"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Record Löschen",
+              "en": "Delete the record"
+            }
+          },
+          "icon": "delete",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Service",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "record_right": "00000000-0000-0000-0000-000000000000",
+      "system": false,
+      "hide_open_button": false,
+      "hide_edit_button": false,
+      "hide_create_button": false,
+      "hide_favorite_button": false
+    }
+  ],
+  "pages": [
+    {
+      "uuid": "00000000-0000-0000-0000-000000000000",
+      "ident": "open_invoices",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "de": "Open Invoices"
+        }
+      },
+      "active": true,
+      "public": false,
+      "layout": "<home>\n    <highlight-button title=\"Home\" text=\"Startseite\" icon=\"home\" link=\"#/\" />\n    <new-line />   \n    <variable name=\"Offene Wartungsrechnungen\" workflow=\"get_open_invoices_workflow\" edit=\"false\"/>\n</home>\n",
+      "workflows": [],
+      "services": []
+    },
+    {
+      "uuid": "00000000-0000-0000-0000-000000000000",
+      "ident": "public_status",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "de": "Public Machine Status"
+        }
+      },
+      "active": true,
+      "public": true,
+      "layout": "<home>\n    \n    <raw-html id=\"status-icon\">\n        <div style=\"padding-top: 7%; display: flex; width: calc(100vw - 10px); justify-content: center;\">\n            <div class=\"animation-ctn\">\n                <div class=\"icon icon--order-success svg\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"154px\" height=\"154px\">  \n                    <g fill=\"none\" stroke=\"###COLOR###\" stroke-width=\"2\"> \n                        <circle cx=\"77\" cy=\"77\" r=\"72\" style=\"stroke-dasharray:480px, 480px; stroke-dashoffset: 960px;\"></circle>\n                        <circle id=\"colored\" fill=\"###COLOR###\" cx=\"77\" cy=\"77\" r=\"72\" style=\"stroke-dasharray:480px, 480px; stroke-dashoffset: 960px;\"></circle>\n                        <polyline class=\"st0\" stroke=\"#fff\" stroke-width=\"10\" points=\"###POINTS###\" style=\"stroke-dasharray:100px, 100px; stroke-dashoffset: 200px;\"/>   \n                    </g> \n                    </svg>\n                </div>\n            </div>    \n        </div>  \n    </raw-html>\n    \n    <new-line/>\n    <raw-html id=\"data-fields\" style =\"display: flex; width: calc(100vw - 10px); justify-content: center;\">\n        <div>\n            <p><strong>Registriert auf: </strong><span id=\"registeredOnDisplay\">###NAME###</span> <i class=\"bi bi-question-circle\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Nicht auf Sie registriert? Bitte kontaktieren Sie uns, wir ändern dies gerne.\"></i></p>\n            <p><strong>Serienummer: </strong><span id=\"serialnumberDisplay\">###SNR###</span></p>\n            <p><strong>Letzte Wartung: </strong><span id=\"datetimeDisplay\">###LAST_SERVICE###</span></p>\n            <p><strong>Wartungsintervall: </strong><span id=\"maintenanceIntervalDisplay\">###INTERVAL###</span> Tage</p>\n            <p id=\"statusColorDisplay\"><strong>Nächste Wartung: </strong><span id=\"nextMaintenanceDisplay\">###NEXT_SERVICE###</span><span id=\"overdueDisplay\"></span></p>\n        </div>\n    </raw-html>\n    \n    <raw-html id=\"error-msg\" style =\"display: flex; width: calc(100vw - 10px); justify-content: center;\">\n        <div>\n            <p><span id=\"errorCodeDisplay\" style=\"color: red\">###ERROR_MSG###</span></p>\n        </div>\n    </raw-html>\n    \n    <raw-html>\n        <style>\n            /* Icon Animation */\n              .animation-ctn{\n                text-align:center;\n                margin-top:2em;\n              }\n              \n                  @-webkit-keyframes checkmark {\n                  0% {\n                      stroke-dashoffset: 100px\n                  }\n              \n                  100% {\n                      stroke-dashoffset: 200px\n                  }\n              }\n              \n              @-ms-keyframes checkmark {\n                  0% {\n                      stroke-dashoffset: 100px\n                  }\n              \n                  100% {\n                      stroke-dashoffset: 200px\n                  }\n              }\n              \n              @keyframes checkmark {\n                  0% {\n                      stroke-dashoffset: 100px\n                  }\n              \n                  100% {\n                      stroke-dashoffset: 0px\n                  }\n              }\n              \n              @-webkit-keyframes checkmark-circle {\n                  0% {\n                      stroke-dashoffset: 480px\n                 \n                  }\n              \n                  100% {\n                      stroke-dashoffset: 960px;\n                    \n                  }\n              }\n              \n              @-ms-keyframes checkmark-circle {\n                  0% {\n                      stroke-dashoffset: 240px\n                  }\n              \n                  100% {\n                      stroke-dashoffset: 480px\n                  }\n              }\n              \n              @keyframes checkmark-circle {\n                  0% {\n                      stroke-dashoffset: 480px \n                  }\n              \n                  100% {\n                      stroke-dashoffset: 960px\n                  }\n              }\n              \n              @keyframes colored-circle { \n                  0% {\n                      opacity:0\n                  }\n              \n                  100% {\n                      opacity:100\n                  }\n              }\n              \n              .inlinesvg .svg svg {\n                  display: inline\n              }\n              \n              .icon--order-success svg polyline {\n                  -webkit-animation: checkmark 0.25s ease-in-out 0.7s backwards;\n                  animation: checkmark 0.25s ease-in-out 0.7s backwards\n              }\n              \n              .icon--order-success svg circle {\n                  -webkit-animation: checkmark-circle 0.6s ease-in-out backwards;\n                  animation: checkmark-circle 0.6s ease-in-out backwards;\n              }\n              .icon--order-success svg circle#colored {\n                  -webkit-animation: colored-circle 0.6s ease-in-out 0.7s backwards;\n                  animation: colored-circle 0.6s ease-in-out 0.7s backwards;\n              }\n        </style>\n    </raw-html>\n</home>",
+      "workflows": [
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Page": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "render",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Render Hook"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Intercepts the rendering"
+            }
+          },
+          "icon": "internet-browser",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "services": [
+        {
+          "uuid": "00000000-0000-0000-0000-000000000000",
+          "owner": {
+            "Page": {
+              "uuid": "00000000-0000-0000-0000-000000000000"
+            }
+          },
+          "ident": "get_machine",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Get Machine"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Get a machine based upon it's qr-code"
+            }
+          },
+          "icon": "machine",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Rune",
+          "kind": "Service",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ]
+    }
+  ]
+}

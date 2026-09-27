@@ -1,0 +1,21 @@
+pub fn show() {
+    return false;
+}
+
+pub async fn main(old, new) {
+    let record = exo::get_record()?;
+    let value = record.get_value("last_maintenance_datetime")?;
+
+    let maintenance_interval = record.get_value("maintenance_interval")?;
+    let maintenance_interval = exo::Duration::from_days(maintenance_interval);
+    let next_maintenance = value + maintenance_interval;
+
+    new.value = next_maintenance;
+    new.name = exo::Language::new_en("Nächste Wartung");
+    Ok(new)
+}
+
+pub async fn test() {
+    main(exo::Variable::new("", ""), exo::Variable::new("", "")).await?;
+    Ok(())
+}
