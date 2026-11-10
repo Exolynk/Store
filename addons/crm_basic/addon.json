@@ -1,0 +1,2633 @@
+{
+  "format_version": 1,
+  "ident": "crm_basic",
+  "version": "1.0.0",
+  "name": {
+    "typ": "language",
+    "langs": {
+      "en": "Basic CRM"
+    }
+  },
+  "description": {
+    "typ": "language",
+    "langs": {
+      "en": "Basic CRM Solution"
+    }
+  },
+  "environment_layout": "<home>\n    <!-- Navigation: filtered table views -->\n    <highlight-button title=\"Companies\" text=\"Accounts and customers\" icon=\"building\" link=\"search?view=table&cols=name,status,industry,contact_count,open_deal_count,open_pipeline,won_revenue,last_activity&query[models][0]=crm_company&query[sort_by]=name\" />\n    <highlight-button title=\"Contacts\" text=\"Contact persons\" icon=\"user\" link=\"search?view=table&cols=name,company,position,email,phone,status&query[models][0]=crm_contact&query[sort_by]=last_name\" />\n    <highlight-button title=\"Deals\" text=\"Open sales pipeline\" icon=\"handshake\" link=\"search?view=table&cols=name,company,stage,amount,probability,weighted_amount,expected_close&query[models][0]=crm_deal&query[where][0][kind]=Expr&query[where][0][chain]=And&query[where][0][condition][ident]=stage&query[where][0][condition][operator]=Equal&query[where][0][condition][value][Any][0]=lead&query[where][0][condition][value][Any][1]=qualified&query[where][0][condition][value][Any][2]=proposal&query[where][0][condition][value][Any][3]=negotiation&query[sort_by]=expected_close\" />\n    <highlight-button title=\"Activities\" text=\"Open and overdue\" icon=\"calendar-check\" link=\"search?view=table&cols=name,kind,status,due_date,company,contact,deal&query[models][0]=crm_activity&query[where][0][kind]=Expr&query[where][0][chain]=And&query[where][0][condition][ident]=status&query[where][0][condition][operator]=Equal&query[where][0][condition][value][Any][0]=open&query[where][0][condition][value][Any][1]=overdue&query[sort_by]=due_date\" />\n    <highlight-button title=\"Pipeline report\" text=\"Forecast and win rate\" icon=\"chart-column\" workflow=\"crm_wf_pipeline\" />\n    <new-line />\n\n    <!-- Key figures: each opens the matching records -->\n    <highlight-data name=\"Open deals\" precision=\"0\"\n        sql=\"SELECT count(uuid) FROM crm_deal WHERE stage = any(['lead', 'qualified', 'proposal', 'negotiation']);\"\n        link=\"search?view=table&cols=name,company,stage,amount,probability,weighted_amount,expected_close&query[models][0]=crm_deal&query[where][0][kind]=Expr&query[where][0][chain]=And&query[where][0][condition][ident]=stage&query[where][0][condition][operator]=Equal&query[where][0][condition][value][Any][0]=lead&query[where][0][condition][value][Any][1]=qualified&query[where][0][condition][value][Any][2]=proposal&query[where][0][condition][value][Any][3]=negotiation&query[sort_by]=expected_close\" />\n    <highlight-data name=\"Open pipeline (CHF)\" precision=\"0\" abbreviate=\"true\"\n        sql=\"SELECT sum_currency(amount, 'CHF') FROM crm_deal WHERE stage = any(['lead', 'qualified', 'proposal', 'negotiation']);\"\n        link=\"search?view=table&cols=name,company,stage,amount,probability,weighted_amount,expected_close&query[models][0]=crm_deal&query[where][0][kind]=Expr&query[where][0][chain]=And&query[where][0][condition][ident]=stage&query[where][0][condition][operator]=Equal&query[where][0][condition][value][Any][0]=lead&query[where][0][condition][value][Any][1]=qualified&query[where][0][condition][value][Any][2]=proposal&query[where][0][condition][value][Any][3]=negotiation&query[sort_by]=weighted_amount&query[sort_order]=desc\" />\n    <highlight-data name=\"Weighted forecast (CHF)\" precision=\"0\" abbreviate=\"true\"\n        sql=\"SELECT sum_currency(weighted_amount, 'CHF') FROM crm_deal WHERE stage = any(['lead', 'qualified', 'proposal', 'negotiation']);\"\n        link=\"search?view=table&cols=name,company,stage,amount,probability,weighted_amount,expected_close&query[models][0]=crm_deal&query[where][0][kind]=Expr&query[where][0][chain]=And&query[where][0][condition][ident]=stage&query[where][0][condition][operator]=Equal&query[where][0][condition][value][Any][0]=lead&query[where][0][condition][value][Any][1]=qualified&query[where][0][condition][value][Any][2]=proposal&query[where][0][condition][value][Any][3]=negotiation&query[sort_by]=weighted_amount&query[sort_order]=desc\" />\n    <highlight-data name=\"Won revenue (CHF)\" precision=\"0\" abbreviate=\"true\"\n        sql=\"SELECT sum_currency(amount, 'CHF') FROM crm_deal WHERE stage = 'won';\"\n        link=\"search?view=table&cols=name,company,contact,amount,closed_at&query[models][0]=crm_deal&query[where][0][kind]=Expr&query[where][0][chain]=And&query[where][0][condition][ident]=stage&query[where][0][condition][operator]=Equal&query[where][0][condition][value][Value]=won&query[sort_by]=closed_at&query[sort_order]=desc\" />\n    <highlight-data name=\"Customers\" precision=\"0\"\n        sql=\"SELECT count(uuid) FROM crm_company WHERE status = 'customer';\"\n        link=\"search?view=table&cols=name,industry,won_revenue,open_pipeline,contact_count,last_activity&query[models][0]=crm_company&query[where][0][kind]=Expr&query[where][0][chain]=And&query[where][0][condition][ident]=status&query[where][0][condition][operator]=Equal&query[where][0][condition][value][Value]=customer&query[sort_by]=won_revenue&query[sort_order]=desc\" />\n    <highlight-data name=\"Leads and prospects\" precision=\"0\"\n        sql=\"SELECT count(uuid) FROM crm_company WHERE status = any(['lead', 'prospect']);\"\n        link=\"search?view=table&cols=name,status,email,phone,contact_count,created_at&query[models][0]=crm_company&query[where][0][kind]=Expr&query[where][0][chain]=And&query[where][0][condition][ident]=status&query[where][0][condition][operator]=Equal&query[where][0][condition][value][Any][0]=lead&query[where][0][condition][value][Any][1]=prospect&query[sort_by]=created_at&query[sort_order]=desc\" />\n    <highlight-data name=\"Open activities\" precision=\"0\"\n        sql=\"SELECT count(uuid) FROM crm_activity WHERE status = 'open';\"\n        link=\"search?view=table&cols=name,kind,status,due_date,company,contact,deal&query[models][0]=crm_activity&query[where][0][kind]=Expr&query[where][0][chain]=And&query[where][0][condition][ident]=status&query[where][0][condition][operator]=Equal&query[where][0][condition][value][Value]=open&query[sort_by]=due_date\" />\n    <highlight-data name=\"Overdue activities\" precision=\"0\"\n        sql=\"SELECT count(uuid) FROM crm_activity WHERE status = 'overdue';\"\n        link=\"search?view=table&cols=name,kind,status,due_date,company,contact,deal&query[models][0]=crm_activity&query[where][0][kind]=Expr&query[where][0][chain]=And&query[where][0][condition][ident]=status&query[where][0][condition][operator]=Equal&query[where][0][condition][value][Value]=overdue&query[sort_by]=due_date\" />\n    <new-line />\n\n    <!-- Charts -->\n    <card name=\"Pipeline value per stage (CHF)\">\n        <chart typ=\"bar\" legend-pos=\"bottom\">\n            <chart-data name=\"Lead\" color=\"#9fb4c7\" sql=\"SELECT sum_currency(amount, 'CHF') FROM crm_deal WHERE stage = 'lead';\" />\n            <chart-data name=\"Qualified\" color=\"#6c9bd2\" sql=\"SELECT sum_currency(amount, 'CHF') FROM crm_deal WHERE stage = 'qualified';\" />\n            <chart-data name=\"Proposal\" color=\"#3a7bd5\" sql=\"SELECT sum_currency(amount, 'CHF') FROM crm_deal WHERE stage = 'proposal';\" />\n            <chart-data name=\"Negotiation\" color=\"#1d4f91\" sql=\"SELECT sum_currency(amount, 'CHF') FROM crm_deal WHERE stage = 'negotiation';\" />\n            <chart-data name=\"Won\" color=\"#2e9d5b\" sql=\"SELECT sum_currency(amount, 'CHF') FROM crm_deal WHERE stage = 'won';\" />\n            <chart-data name=\"Lost\" color=\"#c8473d\" sql=\"SELECT sum_currency(amount, 'CHF') FROM crm_deal WHERE stage = 'lost';\" />\n        </chart>\n    </card>\n    <card name=\"Deals per stage\">\n        <chart typ=\"doughnut\" legend-pos=\"right\">\n            <chart-data name=\"Lead\" color=\"#9fb4c7\" sql=\"SELECT count(uuid) FROM crm_deal WHERE stage = 'lead';\" />\n            <chart-data name=\"Qualified\" color=\"#6c9bd2\" sql=\"SELECT count(uuid) FROM crm_deal WHERE stage = 'qualified';\" />\n            <chart-data name=\"Proposal\" color=\"#3a7bd5\" sql=\"SELECT count(uuid) FROM crm_deal WHERE stage = 'proposal';\" />\n            <chart-data name=\"Negotiation\" color=\"#1d4f91\" sql=\"SELECT count(uuid) FROM crm_deal WHERE stage = 'negotiation';\" />\n            <chart-data name=\"Won\" color=\"#2e9d5b\" sql=\"SELECT count(uuid) FROM crm_deal WHERE stage = 'won';\" />\n            <chart-data name=\"Lost\" color=\"#c8473d\" sql=\"SELECT count(uuid) FROM crm_deal WHERE stage = 'lost';\" />\n        </chart>\n    </card>\n    <card name=\"Companies by status\">\n        <chart typ=\"pie\" legend-pos=\"right\">\n            <chart-data name=\"Lead\" color=\"#9fb4c7\" sql=\"SELECT count(uuid) FROM crm_company WHERE status = 'lead';\" />\n            <chart-data name=\"Prospect\" color=\"#3a7bd5\" sql=\"SELECT count(uuid) FROM crm_company WHERE status = 'prospect';\" />\n            <chart-data name=\"Customer\" color=\"#2e9d5b\" sql=\"SELECT count(uuid) FROM crm_company WHERE status = 'customer';\" />\n            <chart-data name=\"Inactive\" color=\"#8a8a8a\" sql=\"SELECT count(uuid) FROM crm_company WHERE status = 'inactive';\" />\n        </chart>\n    </card>\n</home>\n",
+  "environment_codes": [
+    {
+      "uuid": "ae09742c-7d51-4907-baab-4a9598b01d80",
+      "owner": "Environment",
+      "ident": "crm_company_stats",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "en": "Company key figures",
+          "de": "Firmen-Kennzahlen"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "en": "Recalculates contacts, open deals, pipeline and won revenue of a company"
+        }
+      },
+      "icon": "calculator",
+      "active": true,
+      "system": false,
+      "code": "",
+      "language": "Exs",
+      "kind": "Service",
+      "trigger": "None",
+      "endpoint_method": "Get",
+      "order": 0,
+      "test_record": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "uuid": "bbc0a1c3-d8df-471f-864d-59b9ae652c1c",
+      "owner": "Environment",
+      "ident": "crm_deal_apply",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "de": "Deal-Änderung anwenden",
+          "en": "Apply deal change"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "en": "Shared deal rules: stage probability, closing date, weighted amount, company figures"
+        }
+      },
+      "icon": "workflow",
+      "active": true,
+      "system": false,
+      "code": "",
+      "language": "Exs",
+      "kind": "Service",
+      "trigger": "None",
+      "endpoint_method": "Get",
+      "order": 0,
+      "test_record": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "uuid": "be703f7c-77f8-4fa2-ab96-aa6fb9e346f4",
+      "owner": "Environment",
+      "ident": "crm_lead",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "de": "Web-to-Lead",
+          "en": "Web-to-lead"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "en": "POST endpoint creating company, contact and follow-up call"
+        }
+      },
+      "icon": "inbox",
+      "active": true,
+      "system": false,
+      "code": "",
+      "language": "Exs",
+      "kind": "Endpoint",
+      "trigger": "None",
+      "endpoint_method": "Post",
+      "order": 0,
+      "test_record": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "uuid": "65b79273-2cba-43f5-93bc-b4ef31d10d47",
+      "owner": "Environment",
+      "ident": "crm_mark_overdue",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "de": "Überfällige Aktivitäten markieren",
+          "en": "Mark overdue activities"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "en": "Nightly: open activities past their due date become overdue"
+        }
+      },
+      "icon": "clock-alert",
+      "active": true,
+      "system": false,
+      "code": "",
+      "language": "Exs",
+      "kind": "Service",
+      "trigger": "EveryNight",
+      "endpoint_method": "Get",
+      "order": 0,
+      "test_record": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "uuid": "f478a3e0-cceb-48a0-a047-bc48b978eed1",
+      "owner": "Environment",
+      "ident": "crm_ping",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "en": "CRM Ping",
+          "de": "CRM Ping"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "en": "Smoke test service"
+        }
+      },
+      "icon": "heart-pulse",
+      "active": true,
+      "system": false,
+      "code": "",
+      "language": "Exs",
+      "kind": "Service",
+      "trigger": "None",
+      "endpoint_method": "Get",
+      "order": 0,
+      "test_record": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "uuid": "e694350b-5879-4db2-808e-5553ae17e128",
+      "owner": "Environment",
+      "ident": "crm_pipeline_report",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "en": "Pipeline report",
+          "de": "Pipeline-Report"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "en": "Deals per stage, forecast and win rate in CHF"
+        }
+      },
+      "icon": "chart-column",
+      "active": true,
+      "system": false,
+      "code": "",
+      "language": "Exs",
+      "kind": "Service",
+      "trigger": "None",
+      "endpoint_method": "Get",
+      "order": 0,
+      "test_record": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "uuid": "ea157fc6-c533-496a-ad93-aeffbe8050e6",
+      "owner": "Environment",
+      "ident": "crm_recalc_all",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "de": "CRM-Werte nachführen",
+          "en": "Recalculate CRM values"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "en": "Hourly: weighted amounts, closed deals, contact names and company key figures"
+        }
+      },
+      "icon": "refresh-ccw",
+      "active": true,
+      "system": false,
+      "code": "",
+      "language": "Exs",
+      "kind": "Service",
+      "trigger": "EveryHour",
+      "endpoint_method": "Get",
+      "order": 0,
+      "test_record": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "uuid": "21c2a446-5467-4833-b851-2fc0fb267117",
+      "owner": "Environment",
+      "ident": "crm_wf_pipeline",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "en": "Sales pipeline",
+          "de": "Verkaufs-Pipeline"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "en": "Shows the pipeline report"
+        }
+      },
+      "icon": "chart-column",
+      "active": true,
+      "system": false,
+      "code": "",
+      "language": "Exs",
+      "kind": "Workflow",
+      "trigger": "None",
+      "endpoint_method": "Get",
+      "order": 0,
+      "test_record": "00000000-0000-0000-0000-000000000000"
+    }
+  ],
+  "models": [
+    {
+      "uuid": "09dc75c9-3d78-424b-9f97-6710f49f2e38",
+      "ident": "crm_contact",
+      "version": {
+        "typ": "version",
+        "kind": "Number",
+        "version": "6"
+      },
+      "status": "draft",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "de": "Kontakt",
+          "en": "Contact"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "en": "CRM contact person",
+          "de": "CRM Kontaktperson"
+        }
+      },
+      "icon": "user",
+      "layout": "<record>\n    <tab name=\"Overview\" active=\"true\">\n\n        <card name=\"Contact\">\n            <variable ident=\"name\" readonly=\"true\" />\n            <variable ident=\"first_name\" />\n            <variable ident=\"last_name\" />\n            <variable ident=\"position\" />\n            <variable ident=\"company\" />\n            <variable ident=\"status\" />\n        </card>\n        <card name=\"Communication\">\n            <variable ident=\"email\" />\n            <variable ident=\"phone\" />\n        </card>\n        <card name=\"Notes\">\n            <variable ident=\"description\" />\n        </card>\n    </tab>\n\n    <tab name=\"Logs\">\n        <card name=\"History\">\n            <record-logs />\n        </card>\n    </tab>\n</record>\n",
+      "variables": [
+        {
+          "ident": "name",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Voller Name",
+              "en": "Full name"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Voller Name",
+              "en": "Full name"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Language": {
+              "typ": "Singleline"
+            }
+          }
+        },
+        {
+          "ident": "description",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Notizen",
+              "en": "Notes"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Notes",
+              "de": "Notizen"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Language": {
+              "typ": "Multiline"
+            }
+          }
+        },
+        {
+          "ident": "status",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Status",
+              "en": "Status"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Status",
+              "de": "Status"
+            }
+          },
+          "value": {
+            "Selection": {
+              "typ": "selection",
+              "selected": [
+                "active"
+              ],
+              "options": {
+                "active": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Aktiv",
+                    "en": "Active"
+                  }
+                },
+                "inactive": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Inaktiv",
+                    "en": "Inactive"
+                  }
+                }
+              }
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Selection": {
+              "mode": "Single",
+              "options": {
+                "active": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Aktiv",
+                    "en": "Active"
+                  }
+                },
+                "inactive": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Inaktiv",
+                    "en": "Inactive"
+                  }
+                }
+              },
+              "change_target": "Selection",
+              "empty_entry": false
+            }
+          }
+        },
+        {
+          "ident": "first_name",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Vorname",
+              "en": "First name"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Vorname",
+              "en": "First name"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "String": {
+              "typ": "Singleline"
+            }
+          }
+        },
+        {
+          "ident": "last_name",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Nachname",
+              "en": "Last name"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Nachname",
+              "en": "Last name"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "String": {
+              "typ": "Singleline"
+            }
+          }
+        },
+        {
+          "ident": "position",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Funktion",
+              "en": "Position"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Position",
+              "de": "Funktion"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "String": {
+              "typ": "Singleline"
+            }
+          }
+        },
+        {
+          "ident": "email",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "E-Mail",
+              "de": "E-Mail"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "E-Mail",
+              "de": "E-Mail"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "String": {
+              "typ": "Singleline"
+            }
+          }
+        },
+        {
+          "ident": "phone",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Phone",
+              "de": "Telefon"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Phone",
+              "de": "Telefon"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "String": {
+              "typ": "Singleline"
+            }
+          }
+        },
+        {
+          "ident": "company",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Firma",
+              "en": "Company"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Firma",
+              "en": "Company"
+            }
+          },
+          "value": {
+            "Reference": "00000000-0000-0000-0000-000000000000"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Reference": {
+              "typ": {
+                "RecordTyp": "crm_company"
+              },
+              "index": "Name"
+            }
+          }
+        }
+      ],
+      "record_right": "247316ed-3655-46d3-8b69-fbec6ff3fd32",
+      "system": false,
+      "hide_open_button": false,
+      "hide_edit_button": false,
+      "hide_create_button": false,
+      "hide_favorite_button": false,
+      "workflows": [],
+      "services": [
+        {
+          "uuid": "3015a3eb-5ce0-449f-9429-bac169d7a395",
+          "owner": {
+            "Model": {
+              "uuid": "09dc75c9-3d78-424b-9f97-6710f49f2e38"
+            }
+          },
+          "ident": "on_change",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Kontakt-Regeln",
+              "en": "Contact update rules"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "E-mail validation, full name, company figures (inactive: the server runs ValueChanged hooks as Rune only; crm_recalc_all takes over)"
+            }
+          },
+          "icon": "square-pen",
+          "active": false,
+          "system": false,
+          "code": "",
+          "language": "Exs",
+          "kind": "Service",
+          "trigger": "ValueChanged",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ]
+    },
+    {
+      "uuid": "8e432d36-5afe-4023-ba18-7884aa8792dc",
+      "ident": "crm_company",
+      "version": {
+        "typ": "version",
+        "kind": "Number",
+        "version": "7"
+      },
+      "status": "draft",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "en": "Company",
+          "de": "Firma"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "de": "CRM Firma / Account",
+          "en": "CRM company / account"
+        }
+      },
+      "icon": "building",
+      "layout": "<record>\n    <tab name=\"Overview\" active=\"true\">\n\n        <card name=\"Company\">\n            <variable ident=\"name\" />\n            <variable ident=\"status\" />\n            <variable ident=\"industry\" />\n            <variable ident=\"website\" />\n            <variable ident=\"email\" />\n            <variable ident=\"phone\" />\n            <variable ident=\"address\" />\n            <variable ident=\"annual_revenue\" />\n        </card>\n        <card name=\"Key figures\">\n            <variable ident=\"contact_count\" readonly=\"true\" />\n            <variable ident=\"open_deal_count\" readonly=\"true\" />\n            <variable ident=\"open_pipeline\" readonly=\"true\" />\n            <variable ident=\"won_revenue\" readonly=\"true\" />\n            <variable ident=\"last_activity\" readonly=\"true\" />\n            <new-line />\n            <button title=\"Recalculate\" icon=\"refresh-cw\" workflow=\"wf_recalc\" />\n        </card>\n        <card name=\"Notes\">\n            <variable ident=\"description\" />\n        </card>\n    </tab>\n\n    <tab name=\"Relations\">\n        <card name=\"Related records\">\n            <relation-chart />\n        </card>\n    </tab>\n    <tab name=\"Logs\">\n        <card name=\"History\">\n            <record-logs />\n        </card>\n    </tab>\n</record>\n",
+      "variables": [
+        {
+          "ident": "name",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Name",
+              "de": "Name"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Name",
+              "en": "Name"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Language": {
+              "typ": "Singleline"
+            }
+          }
+        },
+        {
+          "ident": "description",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Notizen",
+              "en": "Notes"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Notes",
+              "de": "Notizen"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Language": {
+              "typ": "Multiline"
+            }
+          }
+        },
+        {
+          "ident": "status",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Status",
+              "de": "Status"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Status",
+              "de": "Status"
+            }
+          },
+          "value": {
+            "Selection": {
+              "typ": "selection",
+              "selected": [
+                "lead"
+              ],
+              "options": {
+                "customer": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Kunde",
+                    "en": "Customer"
+                  }
+                },
+                "prospect": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Interessent",
+                    "en": "Prospect"
+                  }
+                },
+                "lead": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Lead",
+                    "de": "Lead"
+                  }
+                },
+                "inactive": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Inactive",
+                    "de": "Inaktiv"
+                  }
+                }
+              }
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Selection": {
+              "mode": "Single",
+              "options": {
+                "customer": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Customer",
+                    "de": "Kunde"
+                  }
+                },
+                "inactive": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Inaktiv",
+                    "en": "Inactive"
+                  }
+                },
+                "lead": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Lead",
+                    "en": "Lead"
+                  }
+                },
+                "prospect": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Prospect",
+                    "de": "Interessent"
+                  }
+                }
+              },
+              "change_target": "Selection",
+              "empty_entry": false
+            }
+          }
+        },
+        {
+          "ident": "industry",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Branche",
+              "en": "Industry"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Industry",
+              "de": "Branche"
+            }
+          },
+          "value": {
+            "Selection": {
+              "typ": "selection",
+              "selected": [
+                "none"
+              ],
+              "options": {
+                "none": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "-",
+                    "en": "-"
+                  }
+                },
+                "other": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Andere",
+                    "en": "Other"
+                  }
+                },
+                "finance": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Finanzen",
+                    "en": "Finance"
+                  }
+                },
+                "manufacturing": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Manufacturing",
+                    "de": "Produktion"
+                  }
+                },
+                "it": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "IT & Software",
+                    "en": "IT & Software"
+                  }
+                },
+                "health": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Gesundheit",
+                    "en": "Healthcare"
+                  }
+                },
+                "public": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Öffentliche Hand",
+                    "en": "Public Sector"
+                  }
+                },
+                "retail": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Retail",
+                    "de": "Handel"
+                  }
+                }
+              }
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Selection": {
+              "mode": "Single",
+              "options": {
+                "public": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Public Sector",
+                    "de": "Öffentliche Hand"
+                  }
+                },
+                "none": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "-",
+                    "de": "-"
+                  }
+                },
+                "finance": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Finance",
+                    "de": "Finanzen"
+                  }
+                },
+                "health": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Healthcare",
+                    "de": "Gesundheit"
+                  }
+                },
+                "it": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "IT & Software",
+                    "en": "IT & Software"
+                  }
+                },
+                "other": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Andere",
+                    "en": "Other"
+                  }
+                },
+                "retail": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Handel",
+                    "en": "Retail"
+                  }
+                },
+                "manufacturing": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Produktion",
+                    "en": "Manufacturing"
+                  }
+                }
+              },
+              "change_target": "Selection",
+              "empty_entry": false
+            }
+          }
+        },
+        {
+          "ident": "website",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Website",
+              "de": "Webseite"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Website",
+              "de": "Webseite"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "String": {
+              "typ": "Singleline"
+            }
+          }
+        },
+        {
+          "ident": "email",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "E-Mail",
+              "de": "E-Mail"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "E-Mail",
+              "en": "E-Mail"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "String": {
+              "typ": "Singleline"
+            }
+          }
+        },
+        {
+          "ident": "phone",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Phone",
+              "de": "Telefon"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Telefon",
+              "en": "Phone"
+            }
+          },
+          "value": {
+            "String": ""
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "String": {
+              "typ": "Singleline"
+            }
+          }
+        },
+        {
+          "ident": "address",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Adresse",
+              "en": "Address"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Adresse",
+              "en": "Address"
+            }
+          },
+          "value": {
+            "Location": {
+              "typ": "location",
+              "house_number": "",
+              "road": "",
+              "town": "",
+              "state": "",
+              "postcode": "",
+              "country": "",
+              "lat": 0.0,
+              "lon": 0.0,
+              "validated": false
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Location": {
+              "locate_me": true,
+              "validation": "none",
+              "lat_long": true
+            }
+          }
+        },
+        {
+          "ident": "annual_revenue",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Jahresumsatz",
+              "en": "Annual revenue"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Jahresumsatz",
+              "en": "Annual revenue"
+            }
+          },
+          "value": {
+            "Currency": {
+              "typ": "currency",
+              "amount": 0,
+              "currency": "CHF"
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Currency": {
+              "allow_change": true
+            }
+          }
+        },
+        {
+          "ident": "contact_count",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Contacts",
+              "de": "Kontakte"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Kontakte",
+              "en": "Contacts"
+            }
+          },
+          "value": {
+            "Integer": 0
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "open_deal_count",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Offene Deals",
+              "en": "Open deals"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Offene Deals",
+              "en": "Open deals"
+            }
+          },
+          "value": {
+            "Integer": 0
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "open_pipeline",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Offene Pipeline",
+              "en": "Open pipeline"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Open pipeline",
+              "de": "Offene Pipeline"
+            }
+          },
+          "value": {
+            "Currency": {
+              "typ": "currency",
+              "amount": 0,
+              "currency": "CHF"
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Currency": {
+              "allow_change": true
+            }
+          }
+        },
+        {
+          "ident": "won_revenue",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Won revenue",
+              "de": "Gewonnener Umsatz"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Gewonnener Umsatz",
+              "en": "Won revenue"
+            }
+          },
+          "value": {
+            "Currency": {
+              "typ": "currency",
+              "amount": 0,
+              "currency": "CHF"
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Currency": {
+              "allow_change": true
+            }
+          }
+        },
+        {
+          "ident": "last_activity",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Last activity",
+              "de": "Letzte Aktivität"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Last activity",
+              "de": "Letzte Aktivität"
+            }
+          },
+          "value": {
+            "Datetime": "1970-01-01 00:00:00.0 +00:00:00"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "DateTime": {
+              "mode": "Date"
+            }
+          }
+        }
+      ],
+      "record_right": "247316ed-3655-46d3-8b69-fbec6ff3fd32",
+      "system": false,
+      "hide_open_button": false,
+      "hide_edit_button": false,
+      "hide_create_button": false,
+      "hide_favorite_button": false,
+      "workflows": [
+        {
+          "uuid": "0504b682-e359-4797-8de5-6779c48d822f",
+          "owner": {
+            "Model": {
+              "uuid": "8e432d36-5afe-4023-ba18-7884aa8792dc"
+            }
+          },
+          "ident": "wf_recalc",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Neu berechnen",
+              "en": "Recalculate"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Refreshes the key figures"
+            }
+          },
+          "icon": "refresh-cw",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Exs",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "8a9a6704-51ac-468d-b41c-67118981ab9e",
+          "owner": {
+            "Model": {
+              "uuid": "8e432d36-5afe-4023-ba18-7884aa8792dc"
+            }
+          },
+          "ident": "wf_new_contact",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "New contact",
+              "de": "Neuer Kontakt"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Popup to create a contact"
+            }
+          },
+          "icon": "user-plus",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Exs",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 1,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "services": [
+        {
+          "uuid": "ff58ec0a-d623-47b7-b7d5-a2d3a6c7053b",
+          "owner": {
+            "Model": {
+              "uuid": "8e432d36-5afe-4023-ba18-7884aa8792dc"
+            }
+          },
+          "ident": "create_contact",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Kontakt erstellen",
+              "en": "Create contact"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Creates a contact for the company"
+            }
+          },
+          "icon": "user-plus",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Exs",
+          "kind": "Service",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "c0641086-a3e0-4395-9f72-b7f27a0ecffb",
+          "owner": {
+            "Model": {
+              "uuid": "8e432d36-5afe-4023-ba18-7884aa8792dc"
+            }
+          },
+          "ident": "recalc",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Recalculate",
+              "de": "Neu berechnen"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Recalculates the key figures"
+            }
+          },
+          "icon": "refresh-cw",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Exs",
+          "kind": "Service",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ]
+    },
+    {
+      "uuid": "e4308bd9-4eaa-4e60-a0ea-b4e2d44d10e1",
+      "ident": "crm_deal",
+      "version": {
+        "typ": "version",
+        "kind": "Number",
+        "version": "9"
+      },
+      "status": "draft",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "de": "Deal",
+          "en": "Deal"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "en": "CRM sales opportunity",
+          "de": "CRM Verkaufschance"
+        }
+      },
+      "icon": "handshake",
+      "layout": "<record>\n    <tab name=\"Overview\" active=\"true\">\n\n        <card name=\"Deal\">\n            <variable ident=\"name\" />\n            <variable ident=\"stage\" />\n            <variable ident=\"company\" />\n            <variable ident=\"contact\" />\n            <variable ident=\"expected_close\" />\n            <variable ident=\"closed_at\" readonly=\"true\" />\n        </card>\n        <card name=\"Value\">\n            <variable ident=\"amount\" />\n            <variable ident=\"probability\" />\n            <variable ident=\"weighted_amount\" readonly=\"true\" />\n        </card>\n        <card name=\"Notes\">\n            <variable ident=\"description\" />\n        </card>\n    </tab>\n\n    <tab name=\"Logs\">\n        <card name=\"History\">\n            <record-logs />\n        </card>\n    </tab>\n</record>\n",
+      "variables": [
+        {
+          "ident": "name",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Titel",
+              "en": "Title"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Title",
+              "de": "Titel"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Language": {
+              "typ": "Singleline"
+            }
+          }
+        },
+        {
+          "ident": "description",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Notizen",
+              "en": "Notes"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Notes",
+              "de": "Notizen"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Language": {
+              "typ": "Multiline"
+            }
+          }
+        },
+        {
+          "ident": "stage",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Phase",
+              "en": "Stage"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Phase",
+              "en": "Stage"
+            }
+          },
+          "value": {
+            "Selection": {
+              "typ": "selection",
+              "selected": [
+                "lead"
+              ],
+              "options": {
+                "lead": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Lead (10%)",
+                    "en": "Lead (10%)"
+                  }
+                },
+                "lost": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Lost",
+                    "de": "Verloren"
+                  }
+                },
+                "proposal": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Offerte (50%)",
+                    "en": "Proposal (50%)"
+                  }
+                },
+                "qualified": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Qualified (25%)",
+                    "de": "Qualifiziert (25%)"
+                  }
+                },
+                "won": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Won",
+                    "de": "Gewonnen"
+                  }
+                },
+                "negotiation": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Verhandlung (75%)",
+                    "en": "Negotiation (75%)"
+                  }
+                }
+              }
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Selection": {
+              "mode": "Single",
+              "options": {
+                "negotiation": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Negotiation (75%)",
+                    "de": "Verhandlung (75%)"
+                  }
+                },
+                "lead": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Lead (10%)",
+                    "de": "Lead (10%)"
+                  }
+                },
+                "won": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Won",
+                    "de": "Gewonnen"
+                  }
+                },
+                "lost": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Lost",
+                    "de": "Verloren"
+                  }
+                },
+                "proposal": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Offerte (50%)",
+                    "en": "Proposal (50%)"
+                  }
+                },
+                "qualified": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Qualified (25%)",
+                    "de": "Qualifiziert (25%)"
+                  }
+                }
+              },
+              "change_target": "Selection",
+              "empty_entry": false
+            }
+          }
+        },
+        {
+          "ident": "company",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Company",
+              "de": "Firma"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Company",
+              "de": "Firma"
+            }
+          },
+          "value": {
+            "Reference": "00000000-0000-0000-0000-000000000000"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Reference": {
+              "typ": {
+                "RecordTyp": "crm_company"
+              },
+              "index": "Name"
+            }
+          }
+        },
+        {
+          "ident": "contact",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Kontakt",
+              "en": "Contact"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Kontakt",
+              "en": "Contact"
+            }
+          },
+          "value": {
+            "Reference": "00000000-0000-0000-0000-000000000000"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Reference": {
+              "typ": {
+                "RecordTyp": "crm_contact"
+              },
+              "index": "Name"
+            }
+          }
+        },
+        {
+          "ident": "amount",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Amount",
+              "de": "Betrag"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Betrag",
+              "en": "Amount"
+            }
+          },
+          "value": {
+            "Currency": {
+              "typ": "currency",
+              "amount": 0,
+              "currency": "CHF"
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Currency": {
+              "allow_change": true
+            }
+          }
+        },
+        {
+          "ident": "probability",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Probability %",
+              "de": "Wahrscheinlichkeit %"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Wahrscheinlichkeit %",
+              "en": "Probability %"
+            }
+          },
+          "value": {
+            "Integer": 10
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": "None"
+        },
+        {
+          "ident": "weighted_amount",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Gewichteter Betrag",
+              "en": "Weighted amount"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Gewichteter Betrag",
+              "en": "Weighted amount"
+            }
+          },
+          "value": {
+            "Currency": {
+              "typ": "currency",
+              "amount": 0,
+              "currency": "CHF"
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Currency": {
+              "allow_change": true
+            }
+          }
+        },
+        {
+          "ident": "expected_close",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Erwarteter Abschluss",
+              "en": "Expected close"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Expected close",
+              "de": "Erwarteter Abschluss"
+            }
+          },
+          "value": {
+            "Datetime": "1970-01-01 00:00:00.0 +00:00:00"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "DateTime": {
+              "mode": "Date"
+            }
+          }
+        },
+        {
+          "ident": "closed_at",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Closed at",
+              "de": "Abgeschlossen am"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Abgeschlossen am",
+              "en": "Closed at"
+            }
+          },
+          "value": {
+            "Datetime": "1970-01-01 00:00:00.0 +00:00:00"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "DateTime": {
+              "mode": "Date"
+            }
+          }
+        }
+      ],
+      "record_right": "247316ed-3655-46d3-8b69-fbec6ff3fd32",
+      "system": false,
+      "hide_open_button": false,
+      "hide_edit_button": false,
+      "hide_create_button": false,
+      "hide_favorite_button": false,
+      "workflows": [
+        {
+          "uuid": "c43338f5-9962-4f89-baee-559c6451c103",
+          "owner": {
+            "Model": {
+              "uuid": "e4308bd9-4eaa-4e60-a0ea-b4e2d44d10e1"
+            }
+          },
+          "ident": "wf_next_stage",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Next stage",
+              "de": "Nächste Phase"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Moves the deal one stage forward"
+            }
+          },
+          "icon": "chevrons-right",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Exs",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 1,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "f097c06b-0c57-47b5-b452-1f87f1e0dbf4",
+          "owner": {
+            "Model": {
+              "uuid": "e4308bd9-4eaa-4e60-a0ea-b4e2d44d10e1"
+            }
+          },
+          "ident": "wf_mark_won",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Mark as won",
+              "de": "Als gewonnen markieren"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Closes the deal as won"
+            }
+          },
+          "icon": "circle-check",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Exs",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 2,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "734038c9-ab00-4d56-bda7-6110b2322a2d",
+          "owner": {
+            "Model": {
+              "uuid": "e4308bd9-4eaa-4e60-a0ea-b4e2d44d10e1"
+            }
+          },
+          "ident": "wf_mark_lost",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Mark as lost",
+              "de": "Als verloren markieren"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Closes the deal as lost"
+            }
+          },
+          "icon": "circle-x",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Exs",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 3,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "services": [
+        {
+          "uuid": "285cb80a-617d-4c11-99e6-0ff1407fda51",
+          "owner": {
+            "Model": {
+              "uuid": "e4308bd9-4eaa-4e60-a0ea-b4e2d44d10e1"
+            }
+          },
+          "ident": "on_change",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Deal-Regeln",
+              "en": "Deal update rules"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Delegates to crm_deal_apply (inactive: the server runs ValueChanged hooks as Rune only; crm_recalc_all takes over)"
+            }
+          },
+          "icon": "square-pen",
+          "active": false,
+          "system": false,
+          "code": "",
+          "language": "Exs",
+          "kind": "Service",
+          "trigger": "ValueChanged",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        },
+        {
+          "uuid": "3ef969d4-58f5-4b7d-b432-a1f6d66c6a82",
+          "owner": {
+            "Model": {
+              "uuid": "e4308bd9-4eaa-4e60-a0ea-b4e2d44d10e1"
+            }
+          },
+          "ident": "set_stage",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Phase setzen",
+              "en": "Set stage"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Moves the deal to a stage"
+            }
+          },
+          "icon": "workflow",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Exs",
+          "kind": "Service",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ]
+    },
+    {
+      "uuid": "40b130cf-001e-41d2-b2d7-8ab2dc28456b",
+      "ident": "crm_activity",
+      "version": {
+        "typ": "version",
+        "kind": "Number",
+        "version": "9"
+      },
+      "status": "draft",
+      "name": {
+        "typ": "language",
+        "langs": {
+          "en": "Activity",
+          "de": "Aktivität"
+        }
+      },
+      "description": {
+        "typ": "language",
+        "langs": {
+          "de": "CRM Aktivität: Anruf, E-Mail, Meeting oder Aufgabe",
+          "en": "CRM activity: call, e-mail, meeting or task"
+        }
+      },
+      "icon": "calendar-check",
+      "layout": "<record>\n    <tab name=\"Overview\" active=\"true\">\n\n        <card name=\"Activity\">\n            <variable ident=\"name\" />\n            <variable ident=\"kind\" />\n            <variable ident=\"status\" />\n            <variable ident=\"due_date\" />\n            <variable ident=\"completed_at\" readonly=\"true\" />\n        </card>\n        <card name=\"Relations\">\n            <variable ident=\"company\" />\n            <variable ident=\"contact\" />\n            <variable ident=\"deal\" />\n        </card>\n        <card name=\"Details\">\n            <variable ident=\"description\" />\n        </card>\n    </tab>\n\n    <tab name=\"Logs\">\n        <card name=\"History\">\n            <record-logs />\n        </card>\n    </tab>\n</record>\n",
+      "variables": [
+        {
+          "ident": "name",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Subject",
+              "de": "Betreff"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Subject",
+              "de": "Betreff"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": true,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Language": {
+              "typ": "Singleline"
+            }
+          }
+        },
+        {
+          "ident": "description",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Details",
+              "de": "Details"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Details",
+              "de": "Details"
+            }
+          },
+          "value": {
+            "Language": {
+              "typ": "language",
+              "langs": {}
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Language": {
+              "typ": "Multiline"
+            }
+          }
+        },
+        {
+          "ident": "kind",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Typ",
+              "en": "Type"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Typ",
+              "en": "Type"
+            }
+          },
+          "value": {
+            "Selection": {
+              "typ": "selection",
+              "selected": [
+                "task"
+              ],
+              "options": {
+                "meeting": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Meeting",
+                    "en": "Meeting"
+                  }
+                },
+                "task": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Aufgabe",
+                    "en": "Task"
+                  }
+                },
+                "call": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Anruf",
+                    "en": "Call"
+                  }
+                },
+                "email": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "E-Mail",
+                    "de": "E-Mail"
+                  }
+                }
+              }
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Selection": {
+              "mode": "Single",
+              "options": {
+                "call": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Anruf",
+                    "en": "Call"
+                  }
+                },
+                "task": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Aufgabe",
+                    "en": "Task"
+                  }
+                },
+                "email": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "E-Mail",
+                    "de": "E-Mail"
+                  }
+                },
+                "meeting": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Meeting",
+                    "de": "Meeting"
+                  }
+                }
+              },
+              "change_target": "Selection",
+              "empty_entry": false
+            }
+          }
+        },
+        {
+          "ident": "status",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Status",
+              "en": "Status"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Status",
+              "en": "Status"
+            }
+          },
+          "value": {
+            "Selection": {
+              "typ": "selection",
+              "selected": [
+                "open"
+              ],
+              "options": {
+                "open": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Offen",
+                    "en": "Open"
+                  }
+                },
+                "overdue": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Überfällig",
+                    "en": "Overdue"
+                  }
+                },
+                "done": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Done",
+                    "de": "Erledigt"
+                  }
+                }
+              }
+            }
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Selection": {
+              "mode": "Single",
+              "options": {
+                "open": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Open",
+                    "de": "Offen"
+                  }
+                },
+                "done": {
+                  "typ": "language",
+                  "langs": {
+                    "en": "Done",
+                    "de": "Erledigt"
+                  }
+                },
+                "overdue": {
+                  "typ": "language",
+                  "langs": {
+                    "de": "Überfällig",
+                    "en": "Overdue"
+                  }
+                }
+              },
+              "change_target": "Selection",
+              "empty_entry": false
+            }
+          }
+        },
+        {
+          "ident": "due_date",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Fällig am",
+              "en": "Due date"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Fällig am",
+              "en": "Due date"
+            }
+          },
+          "value": {
+            "Datetime": "1970-01-01 00:00:00.0 +00:00:00"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "DateTime": {
+              "mode": "Date"
+            }
+          }
+        },
+        {
+          "ident": "completed_at",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Erledigt am",
+              "en": "Completed at"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Erledigt am",
+              "en": "Completed at"
+            }
+          },
+          "value": {
+            "Datetime": "1970-01-01 00:00:00.0 +00:00:00"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "DateTime": {
+              "mode": "Date"
+            }
+          }
+        },
+        {
+          "ident": "company",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Company",
+              "de": "Firma"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "de": "Firma",
+              "en": "Company"
+            }
+          },
+          "value": {
+            "Reference": "00000000-0000-0000-0000-000000000000"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Reference": {
+              "typ": {
+                "RecordTyp": "crm_company"
+              },
+              "index": "Name"
+            }
+          }
+        },
+        {
+          "ident": "contact",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Contact",
+              "de": "Kontakt"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Contact",
+              "de": "Kontakt"
+            }
+          },
+          "value": {
+            "Reference": "00000000-0000-0000-0000-000000000000"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Reference": {
+              "typ": {
+                "RecordTyp": "crm_contact"
+              },
+              "index": "Name"
+            }
+          }
+        },
+        {
+          "ident": "deal",
+          "system": false,
+          "released": true,
+          "name": {
+            "typ": "language",
+            "langs": {
+              "en": "Deal",
+              "de": "Deal"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Deal",
+              "de": "Deal"
+            }
+          },
+          "value": {
+            "Reference": "00000000-0000-0000-0000-000000000000"
+          },
+          "required": false,
+          "access": {
+            "00000000-0000-0000-0000-000000000000": "Write"
+          },
+          "gdpr": "",
+          "settings": {
+            "Reference": {
+              "typ": {
+                "RecordTyp": "crm_deal"
+              },
+              "index": "Name"
+            }
+          }
+        }
+      ],
+      "record_right": "247316ed-3655-46d3-8b69-fbec6ff3fd32",
+      "system": false,
+      "hide_open_button": false,
+      "hide_edit_button": false,
+      "hide_create_button": false,
+      "hide_favorite_button": false,
+      "workflows": [
+        {
+          "uuid": "ebb68edc-87e0-4f8b-bd52-fee0ccb57f17",
+          "owner": {
+            "Model": {
+              "uuid": "40b130cf-001e-41d2-b2d7-8ab2dc28456b"
+            }
+          },
+          "ident": "wf_complete",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Erledigen",
+              "en": "Complete"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Marks the activity as done"
+            }
+          },
+          "icon": "circle-check",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Exs",
+          "kind": "Workflow",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 1,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "services": [
+        {
+          "uuid": "587fa3a5-49c2-432b-a291-21c48a5fd1b5",
+          "owner": {
+            "Model": {
+              "uuid": "40b130cf-001e-41d2-b2d7-8ab2dc28456b"
+            }
+          },
+          "ident": "complete",
+          "name": {
+            "typ": "language",
+            "langs": {
+              "de": "Erledigen",
+              "en": "Complete"
+            }
+          },
+          "description": {
+            "typ": "language",
+            "langs": {
+              "en": "Completes the activity"
+            }
+          },
+          "icon": "circle-check",
+          "active": true,
+          "system": false,
+          "code": "",
+          "language": "Exs",
+          "kind": "Service",
+          "trigger": "None",
+          "endpoint_method": "Get",
+          "order": 0,
+          "test_record": "00000000-0000-0000-0000-000000000000"
+        }
+      ]
+    }
+  ],
+  "pages": []
+}
